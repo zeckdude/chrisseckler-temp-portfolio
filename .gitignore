@@ -32,9 +32,17 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.local.example
 
 # vercel
 .vercel
+
+# local Cursor / design tooling — not part of the site
+.cursor/
+.impeccable/
+
+# source video (the site serves .mp4)
+*.mov
 
 # typescript
 *.tsbuildinfo
