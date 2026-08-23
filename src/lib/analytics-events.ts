@@ -65,14 +65,39 @@ export const ANALYTICS_EVENTS = [
     when: "Visitor opens /contact or clicks a Get in touch / Hire CTA",
   },
   {
+    name: "footer link clicked",
+    where: "src/components/footer.tsx",
+    when: "Visitor clicks an internal footer navigation link",
+  },
+  {
     name: "nav clicked",
+    where: "src/components/nav.tsx, src/components/work-with-me-menu.tsx",
+    when: "Top nav, wordmark, or Work with me menu option is clicked",
+  },
+  {
+    name: "nav work menu opened",
+    where: "src/components/work-with-me-menu.tsx",
+    when: "Visitor opens the Work with me nav dropdown",
+  },
+  {
+    name: "nav mobile menu opened",
     where: "src/components/nav.tsx",
-    when: "Top nav or wordmark is clicked",
+    when: "Visitor opens the mobile navigation menu",
   },
   {
     name: "gallery slide changed",
     where: "src/components/ui/project-gallery.tsx",
     when: "Visitor advances the case-study gallery",
+  },
+  {
+    name: "case study section clicked",
+    where: "src/components/project-detail/project-section-nav.tsx",
+    when: "Visitor jumps to a section via the case-study sub-nav",
+  },
+  {
+    name: "case study section nav opened",
+    where: "src/components/project-detail/project-section-nav.tsx",
+    when: "Visitor opens the mobile case-study section drawer from the peek tab",
   },
   {
     name: "lightbox opened",
@@ -86,8 +111,13 @@ export const ANALYTICS_EVENTS = [
   },
   {
     name: "resume downloaded",
-    where: "employed page resume Button",
+    where: "full-time page resume Button, footer",
     when: "Visitor clicks Download Resume",
+  },
+  {
+    name: "theme changed",
+    where: "src/components/theme-switcher.tsx",
+    when: "Visitor toggles light/dark mode in the header",
   },
 ] as const;
 

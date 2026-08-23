@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { TechChip } from "@/components/ui/tech-chip";
 import { about } from "@/lib/content";
+import { recommendationsMeta } from "@/lib/recommendations";
 
 export const metadata: Metadata = {
   title: "About",
@@ -45,6 +47,26 @@ export default function AboutPage() {
             </Reveal>
           ))}
         </RevealGroup>
+      </section>
+
+      <section className="mt-20">
+        <Reveal>
+          <h2 className="font-display text-2xl font-extrabold text-text-primary">
+            What colleagues say
+          </h2>
+          <p className="mt-4 max-w-case-study text-lg text-text-secondary">
+            {recommendationsMeta.totalCount} LinkedIn recommendations from managers, peers, and
+            cross-functional partners ({recommendationsMeta.dateRange}) — the same traits keep
+            showing up: attention to detail, team-first mentality, mentorship, and user-first
+            thinking.
+          </p>
+          <Link
+            href="/recommendations"
+            className="mt-6 inline-block text-sm font-medium text-accent transition-opacity hover:opacity-80"
+          >
+            Read selected recommendations →
+          </Link>
+        </Reveal>
       </section>
 
       <section className="mt-20 pb-8">

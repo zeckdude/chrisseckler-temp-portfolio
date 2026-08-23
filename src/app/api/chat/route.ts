@@ -155,7 +155,7 @@ export async function POST(req: Request) {
           badges: z
             .array(z.enum(["professional", "personal", "freelance"]))
             .optional()
-            .describe("Filter by employment type. E.g. ['professional'] for employed projects."),
+            .describe("Filter by employment type. E.g. ['professional'] for full-time projects."),
           techStack: z
             .array(z.string())
             .optional()
@@ -170,7 +170,7 @@ export async function POST(req: Request) {
 
       suggestNavigation: tool({
         description:
-          "Suggest a navigation link when the visitor is asking about something they can view on a specific page. Call this to surface a clickable button. Pages: /projects (all projects), /projects/[slug] (specific project detail — use the slug field from project data), /about (Chris's background & experience), /contact (get in touch). Call this alongside your text answer, not instead of it.",
+          "Suggest a navigation link when the visitor is asking about something they can view on a specific page. Call this to surface a clickable button. Pages: /projects (all projects), /projects/[slug] (specific project detail — use the slug field from project data), /about (Chris's background & experience), /recommendations (LinkedIn recommendations — what colleagues say about working with Chris), /freelance (hire Chris for freelance work), /full-time (full-time roles / join your team), /contact (get in touch). Call this alongside your text answer, not instead of it.",
         inputSchema: z.object({
           links: z
             .array(

@@ -3,7 +3,6 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
-import PageTransition from "@/components/motion/page-transition";
 import { ChatProvider } from "@/lib/chat-context";
 import ChatPanel from "@/components/chat/chat-panel";
 import ChatButton from "@/components/chat/chat-button";
@@ -11,6 +10,8 @@ import { ChatLayoutShift } from "@/components/chat/chat-layout-shift";
 import PresenceTracker from "@/components/presence-tracker";
 import { PostHogProvider, PostHogPageview } from "@/components/posthog-provider";
 import ErrorBoundary from "@/components/error-boundary";
+import { ThemeProvider } from "@/components/theme-provider";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,8 +49,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
+      suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
           href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500&display=swap"
@@ -65,20 +68,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <PostHogPageview />
         </Suspense>
         <ErrorBoundary>
+        <ThemeProvider>
         <ChatProvider>
           <ChatLayoutShift>
             <Nav />
-            <PageTransition>
-              <main id="main" className="flex-1">
-                {children}
-              </main>
-            </PageTransition>
+            {children}
             <Footer />
           </ChatLayoutShift>
           <ChatButton />
           <ChatPanel />
           <PresenceTracker />
         </ChatProvider>
+        </ThemeProvider>
         </ErrorBoundary>
         </PostHogProvider>
       </body>

@@ -15,6 +15,13 @@ export interface MyRole {
   scope: string;
 }
 
+export interface WhatIBuiltItem {
+  title: string;
+  problem: string;
+  fix: string;
+  result: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -27,7 +34,7 @@ export interface Project {
   overview: string;
   myRole?: MyRole;
   problem?: string;
-  whatIBuilt?: string[];
+  whatIBuilt?: WhatIBuiltItem[];
   outcome?: string;
   links: ProjectLinks;
   featured?: boolean;
@@ -51,39 +58,119 @@ export const projects: Project[] = [
     category: "professional",
     dates: "Sep 2024 – Jan 2026",
     tagline:
-      "Sole front-end owner of the Aerospike Cloud Console — the enterprise product that turns prospects into paying customers. Starting with the revenue-critical provisioning wizard, then expanding across the platform.",
-    techStack: ["React", "TypeScript", "React Context", "Material UI", "Vitest", "Playwright", "GraphQL"],
+      "Architected the Aerospike Cloud Console provisioning wizard — the enterprise flow that turns prospects into paying customers — and built many of its pages while the Cloud FE team shipped the rest against those patterns.",
+    techStack: ["React", "TypeScript", "React Context", "Material UI", "REST APIs", "Vitest", "Playwright"],
     overview:
-      "Aerospike Cloud is an enterprise platform for deploying and running high-performance distributed databases in the cloud. I joined as the sole front-end engineer on the Cloud team — no other FE devs, no handoffs. The most critical piece of the product was the provisioning wizard: the multi-step flow where a prospect configures and creates their first database. That's the moment a trial becomes revenue. When I arrived, it was fragmented, stateless on refresh, and running alongside a separate legacy admin console (ACMS) that hadn't been unified into the main platform. I owned fixing it — architecture, delivery, testing, and the engineering culture work around it.",
+      "Aerospike Cloud is an enterprise platform for deploying and running high-performance distributed databases in the cloud. I joined the Cloud team as a senior front-end engineer alongside other frontend engineers. The most critical piece of the product was the provisioning wizard: the multi-step flow where a prospect configures and creates their first database. That's the moment a trial becomes revenue. When I arrived, it was fragmented, stateless on refresh, and running alongside a separate legacy admin console (ACMS) that hadn't been unified into the main platform. I planned the wizard's overall architecture and built many of its pages; other frontend engineers on the team shipped additional wizard and console work following those patterns. I also drove testing strategy, legacy integration, and mentorship during a live customer migration where mistakes were costly.",
     myRole: {
       title: "Senior Front-End Engineer, Cloud Team",
       context:
-        "Sole FE owner on a cross-functional team with backend engineers and product. No other frontend engineers on this flow.",
+        "Senior FE on a cross-functional Cloud team with other frontend engineers, backend engineers, and product. I architected the provisioning wizard; the team built against those patterns.",
       scope:
-        "Full ownership from architecture to delivery — components, state management, testing, legacy integration, mentorship, and tooling.",
+        "Wizard architecture and many core pages; component patterns, state management, testing, legacy integration, Access Manager, and mentorship across the console.",
     },
     problem:
       "Enterprise customers dropping off mid-setup meant lost revenue. The provisioning flow had no clear progress tracking, state wasn't persisted across steps (a refresh meant starting over), and the business logic — availability zones, replication factors, cluster sizing — was deeply interdependent in ways no existing library handled cleanly. On top of that, a separate legacy console (ACMS) existed alongside the main platform, creating a disjointed experience during a live customer migration window where mistakes were costly.",
     whatIBuilt: [
-      "`StepIndicator` — solved user drop-off from a confusing multi-step setup: a flow-aware progress tracker where business logic (not just position) controlled which steps were navigable, with conditional rendering for completed, active, error, and upcoming states",
-      "Smart defaults and presets — solved misconfiguration by less technical users: surfaced sensible defaults based on use case, company type, or earlier selections in the flow",
-      "Inline validation and error messaging — solved undetected errors at submission time: step-level validation prevented users from progressing with bad configurations",
-      "Review-before-launch summary screen — solved costly mistakes on launch: full configuration visible and editable before cluster creation was triggered",
-      "Conditional and branching steps — solved one-size-fits-all form friction: flow adapted based on prior answers, reducing irrelevant options for each cluster path",
-      "Conditional state reset — solved silent breakage from stale upstream data: changing availability zone count automatically invalidated and recalculated downstream node sizing constraints",
-      "Async-dependent field handling — solved mid-flow blocking on API data (regions, instance types): fields loaded without breaking or blocking user progress",
-      "Back navigation with data preservation — solved re-entry friction: all entered data persisted when navigating back a step",
-      "`DatabaseSelectionTable` with persistent cross-step state — solved progress loss on refresh: React Context state hydrated from `localStorage` so users never lost their work on page reload or return visit",
-      "Contextual inline docs panel — solved users leaving the flow to get help: fetched Aerospike documentation and rendered it in a collapsible sidebar formatted to match the console design system, context-aware to the current page",
-      "Dual-mode JSON/YAML config editor with conflict detection — solved inaccessible advanced settings: gave developers an escape hatch to configure any Aerospike option not yet exposed in the UI, with conflict detection that surfaced clashes with values already set via the wizard steps",
-      "Access Manager — full organizational settings surface: member roles and access control, API key management, secrets, and audit logs",
-      "ACMS legacy console integration — reconciled two different state models into a single coherent experience under a tight deadline, without disrupting the live customer migration in flight",
-      "Vitest unit tests across component logic and Playwright end-to-end tests covering the full provisioning flow",
-      "Mentored two junior front-end engineers on component architecture and testing patterns",
-      "Introduced AI-assisted development workflows (LLM-powered IDE tooling) to the team — first person to bring that practice to Aerospike engineering",
+      {
+        title: "`StepIndicator`",
+        problem: "Users dropped off a confusing multi-step setup with no sense of place.",
+        fix: "A flow-aware tracker where business logic, not position, controlled which steps were navigable.",
+        result: "Completed, active, error, and upcoming states were explicit; only valid steps were jumpable.",
+      },
+      {
+        title: "Smart defaults and presets",
+        problem: "Less technical users misconfigured clusters when every option was raw.",
+        fix: "Surfaced sensible defaults from use case, company type, or earlier selections.",
+        result: "Users could progress with a valid starting config instead of guessing.",
+      },
+      {
+        title: "Inline validation and error messaging",
+        problem: "Bad configurations only surfaced at submission, after the work was already done.",
+        fix: "Step-level validation blocked progress until the current step was valid.",
+        result: "Errors were caught in place, not after a failed launch attempt.",
+      },
+      {
+        title: "Review-before-launch summary",
+        problem: "Launching a cluster from a half-seen config made costly mistakes easy.",
+        fix: "A summary screen showed the full configuration and kept it editable.",
+        result: "Users confirmed or corrected everything before cluster creation ran.",
+      },
+      {
+        title: "Conditional and branching steps",
+        problem: "A one-size-fits-all form showed irrelevant options for every cluster path.",
+        fix: "The flow adapted based on prior answers, hiding unused steps and fields.",
+        result: "Each path only asked what that cluster actually needed.",
+      },
+      {
+        title: "Conditional state reset",
+        problem: "Changing an upstream value left stale downstream data that silently broke sizing.",
+        fix: "Changing availability zone count invalidated and recalculated node sizing constraints.",
+        result: "Downstream fields stayed consistent with the current upstream choices.",
+      },
+      {
+        title: "Async-dependent field handling",
+        problem: "Regions and instance types loaded from APIs and blocked the flow mid-step.",
+        fix: "Fields loaded asynchronously without freezing or blocking progress.",
+        result: "Users could keep working while dependent options arrived.",
+      },
+      {
+        title: "Back navigation with data preservation",
+        problem: "Going back a step felt like starting over.",
+        fix: "All entered data persisted when navigating to a previous step.",
+        result: "Users could revise earlier answers without re-entering the rest.",
+      },
+      {
+        title: "`DatabaseSelectionTable`",
+        problem: "A refresh wiped in-progress work and forced users to start over.",
+        fix: "React Context state hydrated from `localStorage` across steps.",
+        result: "Users never lost their configuration on reload or a return visit.",
+      },
+      {
+        title: "Contextual inline docs panel",
+        problem: "Users left the flow to look up Aerospike docs, and often didn't come back.",
+        fix: "Fetched docs into a collapsible sidebar styled to the console, scoped to the current page.",
+        result: "Help stayed in-context instead of sending people out of the wizard.",
+      },
+      {
+        title: "Dual-mode JSON/YAML config editor",
+        problem: "Advanced Aerospike options weren't exposed in the UI, so power users were stuck.",
+        fix: "A JSON/YAML editor with conflict detection against values already set in the wizard.",
+        result: "Developers could configure any option, with clashes surfaced before launch.",
+      },
+      {
+        title: "Access Manager",
+        problem: "Org admin — members, API keys, secrets, audit logs — needed a home in the console.",
+        fix: "Tabbed list-and-dialog CRUD per entity: fetch rows, add/edit via dialogs, REST calls.",
+        result: "Admins could manage org settings without leaving the Cloud Console.",
+      },
+      {
+        title: "ACMS legacy console integration",
+        problem: "ACMS (Aerospike Cloud Managed Service) ran on a human ops model while Cloud DBaaS needed self-serve provisioning — both during a live migration.",
+        fix: "Unified the legacy request-style console with the new self-serve wizard, replacing rigid RJSF schema forms on the provisioning path.",
+        result: "Customers could migrate without disrupting the in-flight cutover.",
+      },
+      {
+        title: "Async launch error handling",
+        problem: "Cluster creation after Review could fail asynchronously with no clear recovery path.",
+        fix: "Surfaced errors on the launch step; users could fix config and retry from the same draft.",
+        result: "A failed launch did not force starting the wizard over or risk double-creating.",
+      },
+      {
+        title: "Vitest and Playwright coverage",
+        problem: "A revenue-critical wizard had no automated coverage for component logic or the full flow.",
+        fix: "Playwright on critical paths and major happy paths; Vitest on smaller funnels and unit-level logic.",
+        result: "Must-not-break provisioning paths had E2E coverage; supporting logic had unit tests.",
+      },
+      {
+        title: "Mentorship",
+        problem: "Junior engineers on the Cloud team needed consistent patterns to ship wizard and console work safely.",
+        fix: "Mentored two junior front-end engineers on the wizard architecture, component patterns, and testing.",
+        result: "They shipped later Cloud UI work reusing the wizard and step patterns established here.",
+      },
     ],
     outcome:
-      "The unified flow drove successful enterprise migrations away from the legacy ACMS console. Persistent state across steps measurably reduced drop-off during provisioning. The component patterns I introduced became the architectural foundation for subsequent Cloud UI work — they outlasted my tenure.",
+      "The unified flow drove successful enterprise migrations away from the legacy ACMS console. Customers reported that persistence meant they no longer lost the wizard on refresh or leaving the page — they could finish later without starting over. The component patterns I introduced became the architectural foundation for subsequent Cloud UI work — they outlasted my tenure.",
     links: {
       live: "https://console.aerospike.com",
       company: "https://aerospike.com",
@@ -107,102 +194,354 @@ export const projects: Project[] = [
     badge: "professional",
     category: "professional",
     dates: "May 2023 – Mar 2024",
-    tagline: "Led design system development and platform engineering at a TV/movie industry creative collaboration startup.",
+    tagline:
+      "Design system, Storybook, and FE process at a TV/movie creative collaboration startup — consistency and speed where there was no system before.",
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Storybook"],
     overview:
-      "Adim is a platform that fosters creative collaboration in the TV and movie industry. I spearheaded the development of a design system that refined the developer experience and met precise design needs, while collaborating closely with stakeholders in a fast-paced startup environment.",
+      "Adim is a creative collaboration platform for TV and movie production. When I joined, the startup was moving fast but had no real design system — duplicated components, visual drift, messy Tailwind, and no Storybook standard. I built shared React components on Next.js and TypeScript, established Storybook and Tailwind discipline, and introduced FE process (PR template, regular FE-only meetings, proactive technical-debt identification) to ship more consistently with fewer preventable bugs.",
     myRole: {
       title: "Senior Front-End Engineer",
-      context: "Cross-functional collaboration with product and design in a startup environment.",
-      scope: "Design system ownership, Storybook, Tailwind implementation, and marketing site redesign.",
+      context: "Cross-functional startup; primary FE owner of design system and team practices.",
+      scope:
+        "Design system and component library, Storybook, Tailwind refinement, marketing site redesign, and FE team process.",
     },
+    problem:
+      "The product shipped fast but UI was duplicated and inconsistent — no shared component layer, undisciplined Tailwind, and no FE process to catch debt or align the team before it compounded.",
     whatIBuilt: [
-      "Scalable design system using Next.js and TypeScript, establishing reusable component libraries and UI standards that improved development velocity and product consistency",
-      "Enhanced Storybook setup to set rigorous UI standards, improving the frontend team's ability to ship polished interfaces",
-      "Streamlined and refined Tailwind CSS implementation for a cohesive, efficient styling framework across the platform",
-      "Redesigned the marketing website, enhancing brand presence and user engagement through a modern, intuitive interface",
-      "Proactively tackled documentation challenges through direct stakeholder communication, ensuring smooth project flow",
+      {
+        title: "Design system and component library",
+        problem: "Engineers rebuilt the same UI every sprint; screens drifted from each other and from design.",
+        fix: "Shared React component library on Next.js and TypeScript — product screens import shared components instead of one-offs.",
+        result: "A reusable UI layer the team could build on consistently.",
+      },
+      {
+        title: "Storybook",
+        problem: "No rigorous catalog for what polished UI looked like before it hit the app.",
+        fix: "Storybook as the surface to set and review UI standards before shipping.",
+        result: "Engineers built and reviewed interfaces against a shared catalog.",
+      },
+      {
+        title: "Tailwind CSS",
+        problem: "Utility styling was copied ad hoc with no shared conventions.",
+        fix: "Streamlined and refined Tailwind across the platform on top of the component layer.",
+        result: "Cohesive styling the team could apply the same way every time.",
+      },
+      {
+        title: "FE team process",
+        problem: "Inconsistent PRs, silent tech debt, and too little FE alignment slowed production and let bugs through.",
+        fix: "PR template, regular FE-only sync meetings, and proactive identification of future technical debt.",
+        result: "More cohesive FE team and fewer preventable issues — no velocity metric claimed.",
+      },
+      {
+        title: "Marketing website",
+        problem: "The marketing site didn't match the product's brand or feel current.",
+        fix: "Redesigned it with a modern, intuitive interface.",
+        result: "Stronger brand presence and a clearer first impression for users.",
+      },
+      {
+        title: "Stakeholder documentation",
+        problem: "Documentation gaps were stalling project flow.",
+        fix: "Direct stakeholder communication to unblock docs and decisions.",
+        result: "Work kept moving instead of waiting on unanswered questions.",
+      },
     ],
+    outcome:
+      "Consistency and shipping speed improved for the FE team — fewer one-offs, clearer reviews, better alignment — but I don't claim a hard velocity number. In ~10 months I left foundation work: design system, Storybook, Tailwind discipline, and FE process that would outlast individual features.",
     links: { company: "https://adim.io" },
   },
   {
-    slug: "toucan-placeholder",
-    title: "Language Learning Chrome Extension",
+    slug: "toucan-browser-extension",
+    title: "Language Learning Browser Extension",
+    company: "Toucan",
+    badge: "professional",
+    category: "professional",
+    dates: "Dec 2019 – Mar 2023 (extension: year 1)",
+    tagline:
+      "Took over Toucan's browser extension from a scrappy CTO prototype and shipped the learning UI the product scaled on.",
+    techStack: ["Browser Extension APIs", "JavaScript", "TypeScript", "React", "Material UI", "Jest"],
+    overview:
+      "Toucan replaces select words on pages you're reading with vocabulary in a language you're learning — on desktop browsers, not Chrome-only. I joined at company inception alongside two other engineers who started the same day. The CTO and a contractor had built a basic extension that swapped words clumsily and changed few of them. I took over extension development in year one — reworking logic and shipping sidebar, contextless learning moments, and in-extension games — before moving to the web platform full time. (Mobile Safari was a separate solo port — see the Safari extension case study.)",
+    myRole: {
+      title: "Senior Software Engineer I → II (early engineer)",
+      context:
+        "Joined at inception with a small engineering cohort; browser extension was my primary focus in year one.",
+      scope: "Extension architecture and features after inheriting the prototype; year one before specializing on the Next.js site.",
+    },
+    problem:
+      "The prototype extension swapped words clumsily and covered too little of each page to feel useful — the core product loop wasn't shippable yet.",
+    whatIBuilt: [
+      {
+        title: "Extension takeover from prototype",
+        problem: "The CTO's build swapped few words and felt clunky on real pages.",
+        fix: "Took over extension development — reworked word-swap logic and product features on top of the existing prototype.",
+        result: "A learning experience the company could scale beyond a demo.",
+      },
+      {
+        title: "Core extension features",
+        problem: "The product needed learning moments that worked on arbitrary sites users already browsed.",
+        fix: "Sidebar, contextless learning moments, and in-extension games on desktop browsers.",
+        result: "Shipped the extension UI the product grew on during my first year.",
+      },
+      {
+        title: "RFCs",
+        problem: "Extension and platform bottlenecks stayed implicit as the team grew.",
+        fix: "Wrote RFCs to surface technical constraints and align the team before building.",
+        result: "Shared context for extension and platform decisions.",
+      },
+    ],
+    outcome:
+      "Toucan reached 1M+ users during my tenure — a company outcome I do not claim sole credit for. I owned browser extension engineering in year one, turning a scrappy prototype into the learning UI the product scaled on.",
+    links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+    featured: true,
+  },
+  {
+    slug: "toucan-safari-extension",
+    title: "Mobile Safari Extension Port",
     company: "Toucan",
     badge: "professional",
     category: "professional",
     dates: "Dec 2019 – Mar 2023",
-    tagline: "A language-learning Chrome extension that teaches vocabulary as you browse the web.",
-    techStack: ["Next.js", "React", "TypeScript", "Node.js", "GraphQL", "MongoDB", "Chrome Extension APIs", "Material UI", "Amplitude", "Jest"],
+    tagline:
+      "Solo port of Toucan's browser extension to mobile Safari — sparse docs, heavy tinkering, one of the first extensions on Apple's marketplace.",
+    techStack: ["Safari Web Extensions", "iOS", "JavaScript", "TypeScript"],
     overview:
-      "Toucan is a browser extension that translates select words on the pages you're already reading into a language you're learning, turning ordinary browsing into passive vocabulary practice. I joined as employee #1 and founding engineer, building the product from the ground up alongside the founders. Promoted from Senior Software Engineer I to Senior Software Engineer II over the course of 3+ years.",
+      "Toucan wanted a mobile Safari extension — the company's first attempt. I was tasked solo with porting the desktop browser extension to mobile Safari. Apple’s extension model had very little documentation at the time. When the obvious path failed, I relied on tinkering and educated guesses from prior extension experience until it worked. It shipped as one of the first mobile extensions on the App Store extension marketplace.",
     myRole: {
-      title: "Founding Engineer, Employee #1 (Senior Software Engineer I → II)",
-      context: "Joined pre-product as the first engineering hire; team grew to 30 employees over 3+ years.",
-      scope: "A full case-study write-up of specific ownership areas is in progress.",
+      title: "Senior Software Engineer I → II (early engineer)",
+      context: "Solo owner of the mobile Safari port; separate from the main browser extension team flow in year one.",
+      scope: "End-to-end port from desktop extension to mobile Safari with no playbook.",
     },
+    problem:
+      "Toucan had no mobile Safari presence and almost no internal knowledge of how to get there — Apple's extension APIs and docs were thin, and this was the company's first try.",
     whatIBuilt: [
-      "Core browser extension features: sidebar, contextless learning moments, games, and mobile Safari launch — contributing to 1M+ users",
-      "Homepage, dashboard, subscription, login/signup flows on a Next.js website that scaled to 13M+ lifetime page views",
-      "Component library and design system for UI uniformity and developer productivity",
-      "Massively improved site performance through refactoring and modern best practices — Core Web Vitals score from 35 → 98, enabling SEO-driven growth",
-      "A/B testing infrastructure to improve user acquisition and retention, providing data to the product team that drove subscription growth",
-      "RFCs to identify technical bottlenecks, increasing team knowledge and delivering better business outcomes",
-      "Mentored junior engineers and conducted employment interviews",
+      {
+        title: "Chrome-to-Safari mobile port",
+        problem: "The desktop extension couldn't run on mobile Safari without a ground-up port, and documentation didn't explain how.",
+        fix: "Solo port of extension logic and behavior to mobile Safari — experimenting when docs ran out and guessing from extension experience when builds failed.",
+        result: "A working mobile Safari extension where none existed before.",
+      },
+      {
+        title: "First marketplace ship",
+        problem: "Mobile extension distribution was new territory for both Toucan and the App Store ecosystem.",
+        fix: "Pushed the port through Apple's extension submission path until it was accepted.",
+        result: "Shipped among the first mobile extensions on the App Store extension marketplace — early proof that Toucan could live outside desktop browsers.",
+      },
     ],
     outcome:
-      "Toucan grew from zero to 1M+ users, 13M lifetime page views, and 30 employees during my time there. Core Web Vitals improved from 35 → 98.",
-    links: { company: "https://jointoucan.com" },
+      "I got Toucan's first mobile Safari extension live with no template to follow — solo, under-documented APIs, and iterative debugging. Do not claim to be the absolute first extension on the store; it was one of the early mobile extensions on the marketplace when that surface was new.",
+    links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
   },
   {
-    slug: "dave-placeholder",
-    title: "Front-End Engineering at Scale",
+    slug: "toucan-website",
+    title: "Web Platform & Marketing Site",
+    company: "Toucan",
+    badge: "professional",
+    category: "professional",
+    dates: "Dec 2019 – Mar 2023 (site: year 1 → ongoing)",
+    tagline:
+      "Architected Toucan's Next.js web platform from scratch — signup, billing, and a marketing site that scored 98 on Core Web Vitals.",
+    techStack: ["Next.js", "React", "TypeScript", "Node.js", "GraphQL", "MongoDB", "Material UI", "Amplitude", "Jest"],
+    overview:
+      "The extension needed a real web platform for signup, billing, account management, and SEO-driven growth. I architected the Next.js site from the beginning while also working the extension in year one; after that I focused on the website full time. A designer joined around the same time — I paired with her so the design system would transfer cleanly into the component library I chose.",
+    myRole: {
+      title: "Senior Software Engineer I → II (early engineer)",
+      context:
+        "Architected the site from day one; primary focus after year one as the team grew to 30.",
+      scope: "Next.js platform, component library, marketing performance, experimentation, and mentorship as the web team scaled.",
+    },
+    problem:
+      "There was no production web platform for signup, billing, or SEO — and the public marketing site eventually scored 35 on Core Web Vitals, blocking organic growth.",
+    whatIBuilt: [
+      {
+        title: "Next.js website",
+        problem: "No in-house site existed for signup, billing, or account management.",
+        fix: "Architected and built the platform from scratch — homepage, dashboard, subscription, and login/signup flows.",
+        result: "Web surfaces handled signup, billing, and marketing traffic as the company grew.",
+      },
+      {
+        title: "Component library",
+        problem: "UI was inconsistent without shared primitives aligned to design.",
+        fix: "Picked the component library and paired with a new designer so the design system transferred cleanly into code.",
+        result: "Developers shipped consistent UI faster as the team grew.",
+      },
+      {
+        title: "Marketing site performance",
+        problem: "Core Web Vitals on the public marketing site scored 35 — LCP, JavaScript weight, and late-loading fonts and layout hurt SEO.",
+        fix: "Optimized first paint — lighter JS, faster LCP, and fixing assets that loaded a beat late and tanked the score.",
+        result: "Marketing-site Core Web Vitals improved from 35 → 98, supporting SEO-driven growth.",
+      },
+      {
+        title: "A/B testing infrastructure",
+        problem: "Acquisition and retention decisions lacked experiment data.",
+        fix: "A/B testing infrastructure feeding the product team.",
+        result: "Data that drove subscription growth.",
+      },
+      {
+        title: "Mentorship and hiring",
+        problem: "A growing web team needed hiring signal and junior support.",
+        fix: "Mentored junior engineers and conducted employment interviews.",
+        result: "The team could hire and ramp people as it scaled to 30.",
+      },
+    ],
+    outcome:
+      "The company reached 13M lifetime page views and 1M+ users — metrics I attribute to the product, not solely to my work. I architected the Next.js platform from scratch and raised marketing-site Core Web Vitals from 35 → 98 by fixing LCP, JavaScript weight, and late-loading fonts and layout.",
+    links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+  },
+  {
+    slug: "dave-support-tooling",
+    title: "Customer Support Tooling",
     company: "Dave.com",
     badge: "professional",
     category: "professional",
     dates: "Mar 2018 – Oct 2019",
-    tagline: "Building banking and customer support interfaces during a period of hypergrowth — from 200K to 4M+ users.",
-    techStack: ["TypeScript", "React", "Redux", "React Native", "Node.js", "GraphQL", "MySQL", "Firebase", "Docker", "Google Cloud Platform"],
+    tagline:
+      "Internal support tooling during fintech hypergrowth — Zendesk embeds, pause/unpause, and faster agent workflows.",
+    techStack: ["JavaScript", "TypeScript", "React", "GraphQL", "Node.js", "MySQL", "Zendesk"],
     overview:
-      "Dave.com is a banking app built to help members avoid overdraft fees and manage cash flow. I joined as a Full Stack Engineer and was promoted to Senior Front-End Engineer, playing an integral role in scaling the startup to a $1B+ unicorn during a period of rapid growth.",
+      "Dave is a banking app helping members avoid overdraft fees. During hypergrowth (200K → 4M+ users), support needed to resolve member issues at scale — growth made it urgent, but the broken part was agents lacking fast, safe access to account data in the tools they already used. I joined as a Full Stack Engineer and was promoted to Senior Front-End Engineer within seven months.",
     myRole: {
       title: "Full Stack Engineer → Senior Front-End Engineer",
       context: "Joined during early hypergrowth; promoted within 7 months.",
-      scope: "Customer support dashboard, mobile app components, public website, and test infrastructure.",
+      scope: "Internal support surfaces — Zendesk integrations, member account actions, and support workflow automation.",
     },
+    problem:
+      "Support agents worked in Zendesk but couldn't see Dave member and bank-linked account data in that view — and members who needed a pause were churning instead.",
     whatIBuilt: [
-      "Suite of customer support tools enabling quick access to and analysis of bank data",
-      "System to pause and unpause user accounts, reducing churn rates and improving retention",
-      "Automated scripts for customer ticket handling, reducing response times",
-      "Entire Dave.com public-facing informational website, built independently while consulting with designers and product",
-      "Modular React Native components and screens for the Dave mobile app",
-      "Unit and integration tests to reduce errors; conducted 50+ employment interviews",
+      {
+        title: "Zendesk customer data modules",
+        problem: "Support lived in Zendesk but couldn't see member and account data in the view they used all day.",
+        fix: "Custom JavaScript modules embedded in Zendesk surfacing customer and account information inline.",
+        result: "Agents diagnosed accounts without leaving Zendesk or waiting on engineering for basic lookups.",
+      },
+      {
+        title: "Pause and unpause accounts",
+        problem: "Members who needed a break were churning instead of pausing.",
+        fix: "Built pause and unpause flows for member accounts.",
+        result: "Members could take a break without fully canceling — better retention than hard churn.",
+      },
+      {
+        title: "Ticket automation",
+        problem: "Customer tickets were handled slowly and by hand.",
+        fix: "Automated scripts for ticket handling.",
+        result: "Faster response times for common support workflows.",
+      },
     ],
     outcome:
-      "Dave scaled from 200K to 4M+ users and reached unicorn status ($1B+ valuation) during this period.",
-    links: { company: "https://dave.com" },
+      "Dave reached unicorn status and 4M+ users during this period — company outcomes, not mine alone. I shipped support tooling that let agents see account data inside Zendesk, pause/unpause for retention, and ticket automation — and helped scale hiring through 50+ interviews.",
+    links: { live: "https://dave.com", company: "https://dave.com" },
   },
   {
-    slug: "chrome-river-placeholder",
-    title: "Expense & Invoice Management Software",
+    slug: "dave-mobile-app",
+    title: "Mobile App (React Native)",
+    company: "Dave.com",
+    badge: "professional",
+    category: "professional",
+    dates: "Mar 2018 – Oct 2019",
+    tagline:
+      "React Native UI during Dave's hypergrowth — modular screens and components as the member app scaled to millions of users.",
+    techStack: ["React Native", "TypeScript", "React", "Redux", "GraphQL", "Firebase"],
+    overview:
+      "Dave's member-facing banking app scaled from 200K to 4M+ users while I was there. I built modular React Native screens and components so the mobile team could ship UI without rewriting every surface from scratch — part of the same promotion from Full Stack to Senior Front-End Engineer within seven months.",
+    myRole: {
+      title: "Full Stack Engineer → Senior Front-End Engineer",
+      context: "Mobile and web contributions during the same hypergrowth window.",
+      scope: "React Native member app UI — reusable screens and components.",
+    },
+    problem:
+      "The mobile app needed reusable screens and components that could keep pace with product growth — one-off UI wouldn't scale as membership exploded.",
+    whatIBuilt: [
+      {
+        title: "React Native screens",
+        problem: "New member-facing flows needed to ship quickly without rewriting UI each time.",
+        fix: "Modular React Native components and screens shared across the app.",
+        result: "The team could ship mobile UI faster as the user base grew.",
+      },
+      {
+        title: "Tests",
+        problem: "Rapid growth increased the cost of mobile regressions.",
+        fix: "Unit and integration tests on critical mobile and shared UI paths.",
+        result: "Fewer errors reaching production during hypergrowth.",
+      },
+    ],
+    outcome:
+      "Dave scaled from 200K to 4M+ users during this period — a company result, not a personal metric. I contributed modular React Native UI and test coverage as the member app grew; promoted to Senior Front-End Engineer within seven months.",
+    links: { live: "https://dave.com", company: "https://dave.com" },
+    featured: true,
+  },
+  {
+    slug: "dave-public-website",
+    title: "Public Marketing Website",
+    company: "Dave.com",
+    badge: "professional",
+    category: "professional",
+    dates: "Mar 2018 – Oct 2019",
+    tagline:
+      "Built Dave.com's public marketing site from scratch — no dedicated web team, shipped with design and product.",
+    techStack: ["TypeScript", "React", "Redux", "Node.js", "GraphQL"],
+    overview:
+      "Dave needed a public-facing site for marketing and member acquisition, and there wasn't one owned in-house — no dedicated web team. I was the sole front-end owner: React, TypeScript, and Redux, implementing from design comps and product requirements while partners owned visuals and specs. Whatever SEO shipped with the site, I don't claim a strong SEO metric. The company scaled from 200K to 4M+ users in that window — a company outcome, not mine alone.",
+    myRole: {
+      title: "Full Stack Engineer → Senior Front-End Engineer",
+      context: "Same tenure as support tooling and mobile app work; promoted within 7 months.",
+      scope:
+        "Solo FE owner of the public marketing site — implementation end to end; design and product owned visuals and requirements.",
+    },
+    problem:
+      "Dave had no in-house public marketing site — acquisition and brand depended on shipping dave.com without a web team standing behind it.",
+    whatIBuilt: [
+      {
+        title: "Dave.com public website",
+        problem: "Marketing and product needed a production public site and no one owned it internally.",
+        fix: "Built the full public site as sole FE — React, TypeScript, Redux — implementing design comps and product requirements.",
+        result: "Production marketing site live at dave.com without a dedicated in-house web team; no traffic or SEO metric claimed beyond shipping.",
+      },
+    ],
+    outcome:
+      "I owned the public marketing site implementation during hypergrowth. Dave reached unicorn status in that period — a company metric. The honest result for this project is a live marketing presence built solo on the front end with design and product partners.",
+    links: { live: "https://dave.com", company: "https://dave.com" },
+  },
+  {
+    slug: "chrome-river-expense-reporting",
+    title: "Expense Reporting Software",
     company: "Chrome River",
     badge: "professional",
     category: "professional",
     dates: "Dec 2015 – Mar 2018",
-    tagline: "Front-end engineering on enterprise expense and invoice management software — large-scale Backbone.js app in a fintech environment.",
+    tagline:
+      "Front-end engineering on enterprise expense reporting — employee submit flows in a large-scale Backbone.js fintech app.",
     techStack: ["JavaScript", "Backbone.js", "AJAX", "REST APIs", "HTML", "CSS"],
     overview:
-      "Chrome River (now Emburse Enterprise) builds expense and invoice management software used by large, global organizations to automate travel and expense reporting. I implemented modular front-end views using functional JavaScript, collaborating closely with product managers and back-end engineers in an agile environment.",
+      "Chrome River (now Emburse Enterprise) builds expense and invoice management software used by large, global organizations. For two-plus years I worked on the expense reporting side — modular Backbone.js views for employee submit flows, wired to REST endpoints, shipped on sprint cadence with pixel-accurate Figma specs.",
     myRole: {
       title: "Software Engineer, Front End",
       context: "Agile team; close collaboration with PMs and back-end engineers.",
-      scope: "Front-end views, REST API integration, bug resolution, and pixel-accurate Figma implementation.",
+      scope:
+        "Expense reporting surfaces — employee submit flows, REST integration, bug fixes, and pixel-accurate Figma implementation.",
     },
+    problem:
+      "A large Backbone.js expense reporting app needed new employee submit views wired to REST data and shipped every sprint — in fintech, design specs had to match production UI.",
     whatIBuilt: [
-      "Modular front-end views in a large-scale Backbone.js application, using AJAX to interface with REST API endpoints",
-      "Pixel-accurate implementation of Figma/design specs, ensuring consistent user experience",
-      "Bug resolution and story delivery within an agile workflow",
+      {
+        title: "Employee expense submit views",
+        problem: "Expense reporting needed new employee-facing views wired to live REST data.",
+        fix: "Modular Backbone.js views using AJAX against REST endpoints.",
+        result: "New submit surfaces shipped inside the existing expense reporting app.",
+      },
+      {
+        title: "Pixel-accurate specs",
+        problem: "Design specs weren't translating into a consistent UI.",
+        fix: "Pixel-accurate implementation of Figma and design specs.",
+        result: "A consistent experience across the expense views I owned.",
+      },
+      {
+        title: "Agile delivery",
+        problem: "Bugs and stories stacked up in an agile fintech workflow.",
+        fix: "Resolved bugs and delivered stories in sprint cadence.",
+        result: "Work shipped on the team's schedule — no single hero bug story; honest routine enterprise FE.",
+      },
     ],
+    outcome:
+      "Two-plus years of reliable sprint delivery on expense reporting surfaces — pixel-accurate Figma implementation and modular Backbone views. No single project metric claimed.",
     links: { company: "https://emburse.com" },
   },
   {
@@ -221,21 +560,56 @@ export const projects: Project[] = [
       title: "Lead Front-End Developer",
       context: "Small team at Trailer Park, building for Fox Entertainment Group.",
       scope:
-        "Led all front-end development — component architecture, JavaScript interactivity, CMS integration, and mobile-responsive layout across every section of the site.",
+        "Led all front-end development — JavaScript interactivity, CMS integration, mobile-responsive layout. Back-end/CMS teammates owned Yii/PHP.",
     },
     problem:
       "Fox needed a single portal that could serve audiences across multiple countries while letting regional teams control their own content — different titles, different release dates, different retailer partnerships — without touching code. At the same time, the site had to handle a wide range of content types: hero carousels promoting current theatrical releases, structured catalog grids for TV seasons, multi-tab movie detail pages with purchase flows, and promotional campaign tiles, all on a CMS-editable foundation.",
     whatIBuilt: [
-      "A full-bleed hero carousel on the homepage promoting current theatrical releases, with dot navigation, directional controls, and smooth transitions — driving traffic to individual title pages",
-      "Multi-tab movie and TV detail pages covering Movie Info (synopsis, cast and crew), Digital HD (retailer purchase grid), Blu-ray, and DVD — each with its own sub-navigation and content zones",
-      "A Digital HD purchasing flow displaying region-appropriate retailers (iTunes, Google Play, Amazon, Xbox 360, Sky Store, and others) per title, driven by CMS configuration",
-      "A photo slider on movie detail pages for cast and production imagery",
-      "Promotional campaign tiles configurable by Fox's regional teams — used for franchise campaigns like the James Bond Collection and Bridge of Spies",
-      "A large-format catalog grid for TV series available to own, handling a wide range of titles with consistent card layouts and metadata",
-      "A fully mobile-responsive layout across every page, built on the Yii PHP MVC framework with a CMS layer that let Fox's non-technical regional teams update content, swap imagery, and configure the retailer grid per country without engineering involvement",
+      {
+        title: "Homepage hero carousel",
+        problem: "Theatrical releases needed a homepage moment that drove people into titles.",
+        fix: "Full-bleed hero with dots, directional controls, and smooth transitions.",
+        result: "Current releases had a clear path to their title pages.",
+      },
+      {
+        title: "Multi-tab detail pages",
+        problem: "Movie and TV pages had to cover info, Digital HD, Blu-ray, and DVD without clutter.",
+        fix: "Multi-tab pages with their own sub-nav and content zones.",
+        result: "Each format had a dedicated place without dumping everything on one screen.",
+      },
+      {
+        title: "Digital HD purchasing",
+        problem: "Retailer availability differed by country and couldn't be hardcoded.",
+        fix: "A CMS-driven retailer grid — iTunes, Google Play, Amazon, Xbox, Sky Store, and others. Hardest JS problem: per-region, per-title store lists from CMS without hardcoding.",
+        result: "Each title showed the right stores for that region.",
+      },
+      {
+        title: "Photo slider",
+        problem: "Cast and production stills had no structured place on title pages.",
+        fix: "A photo slider on movie detail pages.",
+        result: "Imagery was browsable without leaving the title.",
+      },
+      {
+        title: "Promotional campaign tiles",
+        problem: "Regional teams needed campaign modules they could configure themselves.",
+        fix: "CMS-configurable tiles for campaigns like Bond and Bridge of Spies.",
+        result: "Local teams could run franchise campaigns without engineering.",
+      },
+      {
+        title: "TV catalog grid",
+        problem: "A large TV-to-own catalog needed a consistent, scalable layout.",
+        fix: "A large-format grid with consistent cards and metadata.",
+        result: "Many titles displayed uniformly instead of as one-off layouts.",
+      },
+      {
+        title: "Responsive CMS foundation",
+        problem: "Regional teams couldn't update content, imagery, or retailers without engineering.",
+        fix: "Mobile-responsive Yii MVC site with a CMS for content, images, and retailer grids.",
+        result: "Non-technical regional teams owned their country's site.",
+      },
     ],
     outcome:
-      "The portal launched internationally and served a large audience across multiple Fox regions. The CMS architecture gave Fox's local teams genuine autonomy over their regional content — a key deliverable that separated this from a typical static build.",
+      "Shipped on deadline for Fox's international theatrical and marketing beat — portal live across multiple regions. CMS gave regional teams autonomy over content; no traffic metric claimed.",
     links: { company: "https://trailerparkgroup.com" },
     images: [
       "/projects/fox-international-portal/1-homepage-hero.png",
@@ -246,24 +620,6 @@ export const projects: Project[] = [
       "/projects/fox-international-portal/6-digital-hd-retailers.png",
       "/projects/fox-international-portal/7-early-access.png",
     ],
-  },
-  {
-    slug: "trailer-park-placeholder",
-    title: "Front-End Engineering for Entertainment Marketing",
-    company: "Trailer Park",
-    badge: "professional",
-    category: "professional",
-    dates: "Dates to be confirmed",
-    tagline: "Front-end engineering for campaigns and products at an entertainment marketing agency — clients included Apple, Warner Bros., Fox Entertainment Group, and major streaming platforms.",
-    techStack: [],
-    overview:
-      "Trailer Park Group is an entertainment marketing and content production agency behind trailers and campaigns for major film, TV, and streaming releases. A full write-up of this role is in progress.",
-    myRole: {
-      title: "Frontend Engineer",
-      context: "Details on team and scope coming soon.",
-      scope: "Details on scope of ownership coming soon.",
-    },
-    links: { company: "https://trailerparkgroup.com" },
   },
   {
     slug: "warner-bros-300",
@@ -282,13 +638,42 @@ export const projects: Project[] = [
       context: "Delivered at Trailer Park as part of the Warner Bros. campaign team.",
       scope: "Front-end development across the full site: media embeds, responsive layout, and social integrations.",
     },
+    problem:
+      "Warner Bros. needed a mobile-first teaser site live ahead of the theatrical release — trailers, character content, poster downloads, and social sharing in one responsive package.",
     whatIBuilt: [
-      "Embedded YouTube trailers with responsive video layout",
-      "Character profiles and plot synopsis sections",
-      "Movie poster download functionality",
-      "Social sharing features for Facebook, Twitter, and other platforms",
-      "Fully mobile-responsive layout across all devices",
+      {
+        title: "YouTube trailers",
+        problem: "Trailers needed to play on a marketing site without breaking the layout.",
+        fix: "Embedded YouTube trailers in a responsive video layout.",
+        result: "Trailers worked across screen sizes.",
+      },
+      {
+        title: "Character profiles",
+        problem: "The campaign needed a place for characters and plot beyond the trailer.",
+        fix: "Character profile and plot synopsis sections.",
+        result: "Visitors could learn the story without leaving the teaser site.",
+      },
+      {
+        title: "Poster downloads",
+        problem: "Fans had no official way to grab the movie poster from the site.",
+        fix: "Movie poster download functionality.",
+        result: "The poster was a one-click asset, not a screenshot.",
+      },
+      {
+        title: "Social sharing",
+        problem: "Campaign traffic needed a path onto Facebook, Twitter, and other networks.",
+        fix: "Social sharing features for those platforms.",
+        result: "Visitors could share the teaser without copying URLs by hand.",
+      },
+      {
+        title: "Mobile-responsive layout",
+        problem: "Movie marketing traffic was heavily mobile and the layout had to hold up.",
+        fix: "A fully mobile-responsive layout across the site.",
+        result: "The teaser worked on phones as well as desktop.",
+      },
     ],
+    outcome:
+      "Shipped for the 300: Rise of an Empire marketing campaign on a theatrical deadline — no traffic or engagement metric claimed.",
     links: { company: "https://trailerparkgroup.com" },
   },
   {
@@ -308,12 +693,36 @@ export const projects: Project[] = [
       context: "Trailer Park team working directly with Warner Bros. on the Cartoon Universe game portal.",
       scope: "Front-end rebuild, Drupal customization, Zend PHP integration, and SOAP API connectivity.",
     },
+    problem:
+      "Parents of kids playing Warner Bros.' Cartoon Universe MMORPG needed a modern portal for account management and game-linked actions — the existing parents' portal was outdated and hard to maintain.",
     whatIBuilt: [
-      "Full front-end redesign and rebuild of the parents' portal",
-      "Drupal customization for the CMS layer managing portal content",
-      "Zend PHP framework integration for the application tier",
-      "SOAP API integration connecting the portal to the Warner Bros. Cartoon Universe game backend",
+      {
+        title: "Parents' portal rebuild",
+        problem: "The parents' portal was outdated and needed a full visual and structural rebuild.",
+        fix: "Redesigned and rebuilt the front end from the ground up.",
+        result: "Parents got a new portal UI instead of a patched legacy page.",
+      },
+      {
+        title: "Drupal CMS",
+        problem: "Portal content needed a CMS layer the team could actually manage.",
+        fix: "Drupal customization for portal content.",
+        result: "Content could be managed without a full engineering cycle.",
+      },
+      {
+        title: "Zend PHP application tier",
+        problem: "The application tier needed a framework between the CMS and APIs.",
+        fix: "Zend PHP framework integration.",
+        result: "Server-side logic had a structured home in the rebuild.",
+      },
+      {
+        title: "SOAP API integration",
+        problem: "The portal had to talk to the game backend, which was SOAP.",
+        fix: "SOAP API integration to the Cartoon Universe game backend.",
+        result: "Parents' portal actions could reach the live game systems.",
+      },
     ],
+    outcome:
+      "Rebuilt parents' portal shipped — Drupal and Zend tiers connected to the game's SOAP backend. No usage metric claimed.",
     links: {
       company: "https://trailerparkgroup.com",
     },
@@ -335,15 +744,42 @@ export const projects: Project[] = [
       context: "Built for Pro Print & Services to serve their Applied Materials corporate account.",
       scope: "Full project ownership — front-end UI, back-end order logic, PDF generation, and the admin CMS.",
     },
+    problem:
+      "Applied Materials employees ordered business cards through slow, error-prone email back-and-forth — typos, missing approvals, and no self-service preview before print.",
     whatIBuilt: [
-      "An order form for employees to customize their business card details with live validation",
-      "PDF preview functionality so employees could review the card layout before submitting",
-      "A manager approval workflow with email notifications — orders routed through approval before going to print",
-      "A custom CMS for Pro Print & Services employees to track all orders, statuses, and approval history",
-      "Database-backed order management with full order history and status tracking",
+      {
+        title: "Business card order form",
+        problem: "Employees ordered cards through slow, error-prone back-and-forth.",
+        fix: "A web form with live validation for card details.",
+        result: "Orders started complete and valid instead of bouncing on typos.",
+      },
+      {
+        title: "PDF preview",
+        problem: "Employees couldn't see the card layout until it was already in print.",
+        fix: "Server-generated PDF preview before submit — preview matched print output.",
+        result: "People caught layout mistakes before the order went to a manager.",
+      },
+      {
+        title: "Manager approval workflow",
+        problem: "Orders went to print without a gated approval step.",
+        fix: "Email-notified manager approval before print.",
+        result: "Only approved cards reached the print queue.",
+      },
+      {
+        title: "Print-team CMS",
+        problem: "The print team had no place to track orders, statuses, or approval history.",
+        fix: "A custom CMS for Pro Print employees.",
+        result: "The shop could manage the Applied Materials pipeline without a developer.",
+      },
+      {
+        title: "Order history",
+        problem: "Order history lived in email threads, not a system of record.",
+        fix: "Database-backed order management with full history and status tracking.",
+        result: "Any order could be looked up instead of hunted down.",
+      },
     ],
     outcome:
-      "Reduced the manual workload for the print team and sped up the ordering cycle for Applied Materials' employees, replacing a slow back-and-forth email process with a self-service, approval-gated system.",
+      "Reduced manual workload for the print team and sped up ordering for Applied Materials employees — self-service, approval-gated flow replacing email back-and-forth. Internal corporate scale; don't remember exact order volume.",
     links: {},
   },
   {
@@ -355,20 +791,55 @@ export const projects: Project[] = [
     tagline: "An interactive, browser-based NumPy learning platform — no Python install required.",
     techStack: ["Next.js 16", "React 19", "TypeScript", "Custom JS NumPy Engine", "PostHog", "Vitest"],
     overview:
-      "NumPy Dojo is a self-contained learning platform for NumPy — the foundational Python library for numerical computing. Most NumPy tutorials require a local Python environment to run code, which creates friction for beginners. NumPy Dojo removes that barrier entirely: it runs a custom JavaScript engine that mirrors real NumPy syntax directly in the browser. Anyone can open the site and start writing and running NumPy code immediately.",
+      "NumPy Dojo is a browser-based NumPy learning platform I spec'd and shipped with AI-assisted implementation. Most tutorials require a local Python environment; this runs a custom in-browser engine so anyone can open the site and practice immediately. I directed the build — lesson scope, UX, and architecture — rather than hand-writing every line of the engine myself.",
     problem:
       "Learning NumPy typically means setting up Python, installing packages, and configuring a local environment before writing a single line of code. That setup friction is a real barrier — especially for people who are new to Python or just want to explore. Existing browser-based options (like Google Colab) are overkill for focused NumPy practice.",
     whatIBuilt: [
-      "A custom Python-to-JavaScript transpiler and NumPy engine (NDArray + np.* API) — no external dependencies, runs entirely client-side",
-      "22 progressive lessons covering array creation through linear algebra, each with a built-in code editor and automated output validation",
-      "12 real-world scenarios (data analysis, finance, image processing, engineering) teaching when and why to use NumPy",
-      "A quiz system with configurable question count (10–25), mixed formats (multiple choice, true/false, code output), retry logic for wrong answers, and full quiz history",
-      "Progress tracking with a completion meter, code persistence across sessions via localStorage, keyboard shortcuts, and adjustable editor font size",
-      "PostHog analytics integration (client and server-side) for product tracking and error monitoring",
-      "CI/CD via GitHub Actions, deployed to Vercel with zero config",
+      {
+        title: "In-browser NumPy engine",
+        problem: "Learning NumPy required installing Python and packages first.",
+        fix: "AI-assisted build of a client-side engine targeting a curated `np.*` subset for lessons — intended to reject unimplemented ops clearly. I directed the architecture; I haven't audited every op boundary myself.",
+        result: "Anyone could run NumPy-style syntax in the browser without a local install.",
+      },
+      {
+        title: "Progressive lessons",
+        problem: "Tutorials jumped around without a path from arrays to linear algebra.",
+        fix: "22 progressive lessons with a built-in editor and automated output validation.",
+        result: "Learners could practice and get checked without leaving the page.",
+      },
+      {
+        title: "Real-world scenarios",
+        problem: "Lessons showed syntax but not when or why to use NumPy.",
+        fix: "12 scenarios across data analysis, finance, image processing, and engineering.",
+        result: "Practice was tied to actual use, not just API trivia.",
+      },
+      {
+        title: "Quiz system",
+        problem: "There was no way to test retention beyond running lesson code.",
+        fix: "Configurable quizzes (10–25 questions), mixed formats, retries, and history.",
+        result: "Learners could measure themselves and see past attempts.",
+      },
+      {
+        title: "Progress tracking",
+        problem: "Refreshing the browser meant losing code and any sense of completion.",
+        fix: "Completion meter, `localStorage` persistence, shortcuts, and adjustable editor font.",
+        result: "Progress and code survived sessions without an account.",
+      },
+      {
+        title: "PostHog analytics",
+        problem: "No product or error signal from real learner usage.",
+        fix: "PostHog on client and server for tracking and error monitoring.",
+        result: "Usage and failures were visible after launch.",
+      },
+      {
+        title: "CI/CD",
+        problem: "Deploys and checks needed to be automatic for a solo project.",
+        fix: "GitHub Actions CI/CD deployed to Vercel with zero config.",
+        result: "Main stayed shippable without a manual release ritual.",
+      },
     ],
     outcome:
-      "Live and publicly accessible. Built to support my own AI engineering bootcamp work and open-sourced for other learners.",
+      "Live and open-sourced for my AI bootcamp learning and other learners. No public usage metric claimed. Custom in-browser engine vs heavier options like Pyodide was the intended tradeoff (faster load, lesson-scoped control) — I directed that decision but didn't implement the engine solo.",
     links: {
       live: "https://numpydojo.com",
       github: "https://github.com/zeckdude/numpy-dojo",
@@ -381,13 +852,43 @@ export const projects: Project[] = [
     badge: "personal",
     category: "personal-freelance",
     dates: "Dates to be confirmed",
-    tagline: "A real estate search UI demo built in React, showcasing MLS data browsing and filtering.",
-    techStack: ["React"],
+    tagline: "A conceptual React MLS search demo — filters, Leaflet map, and listing detail; not a production MLS product.",
+    techStack: ["React", "Redux", "Leaflet", "UI Kit", "RETS API"],
     overview:
-      "HomeSearch is a front-end demo project exploring how to build a clean, responsive real estate search experience on top of MLS data. It demonstrates filtering, listing display, and property detail views in a modern React architecture.",
+      "HomeSearch (MLS Demo React) is an honest UI exercise — a cleaner real-estate browsing experience on MLS-shaped data. Filters, a Leaflet map, listing grid, and property detail views. RETS integration exists in the codebase when you configure an API key locally; the public GitHub Pages demo is conceptual and not connected to a live MLS feed.",
     problem:
-      "Real estate search UIs are notoriously cluttered and hard to navigate. This project was an exercise in building a simpler, more focused browsing experience — and a chance to work with real-world listing data structures.",
-    links: { github: "https://github.com/zeckdude/mls-demo-react" },
+      "Real estate search UIs are notoriously cluttered and hard to navigate. This was an exercise in building a simpler, more focused browsing experience — and working with real-world listing data structures.",
+    myRole: {
+      title: "Front-End Developer",
+      context: "Personal demo project; conceptual, not a shipped product.",
+      scope: "Full React UI — filters, map, listings, detail views.",
+    },
+    whatIBuilt: [
+      {
+        title: "Filter and listing grid",
+        problem: "Typical MLS UIs bury filters in clutter.",
+        fix: "Filter panel driving a responsive listing grid.",
+        result: "A focused browse path from search criteria to properties.",
+      },
+      {
+        title: "Leaflet map",
+        problem: "Listings without geographic context are hard to scan.",
+        fix: "Leaflet map integrated with listing data.",
+        result: "Properties visible on a map as well as in the grid.",
+      },
+      {
+        title: "Property detail view",
+        problem: "A demo needs a place to drill into one listing.",
+        fix: "Detail view for individual property records.",
+        result: "Grid → detail flow completes the browse loop.",
+      },
+    ],
+    outcome:
+      "Live conceptual demo on GitHub Pages — honest MLS UI exercise, not a production app. No usage metric claimed.",
+    links: {
+      live: "https://zeckdude.github.io/mls-demo-react/",
+      github: "https://github.com/zeckdude/mls-demo-react",
+    },
   },
   {
     slug: "exact-recall",
@@ -395,7 +896,7 @@ export const projects: Project[] = [
     badge: "personal",
     category: "personal-freelance",
     dates: "2024 – Present",
-    tagline: "An AI-powered event memory logger — capture moments through conversation, recall them with semantic search later.",
+    tagline: "Capture conversations you don't want to forget — structured event logging with search, still in active development.",
     techStack: [
       "Next.js",
       "PostgreSQL",
@@ -408,19 +909,49 @@ export const projects: Project[] = [
       "Twilio",
     ],
     overview:
-      "Exact Recall helps you capture, organize, and retrieve important life events through natural conversation instead of forms. You chat with an AI that asks the right follow-up questions, then it stores a structured, searchable summary you can revisit later. It's built around the idea that human memory is lossy — important details from meetings, interactions, and experiences fade quickly, and most note-taking tools are too general-purpose to fix that.",
+      "Exact Recall is a personal tool for conversations and moments I don't want to forget. I chat with Claude, which asks follow-ups one at a time, then stores a structured summary I can search later. Still in active development — core logging and three search modes work; retrieval quality isn't measured yet.",
     problem:
-      "Important conversations, decisions, and moments get forgotten or misremembered. Existing note-taking tools require too much upfront structure and friction to use in the moment, and even when something does get written down, finding it again later by keyword alone often fails — you remember the gist of a memory, not the exact words you used to describe it.",
+      "Important conversations and moments fade — I forget details, misremember what was said, and generic note apps need too much structure in the moment to be useful.",
     whatIBuilt: [
-      "A conversational logging flow where Claude (via the Anthropic API) interviews the user one question at a time, then runs a finalization pass that produces a summary, structured fields, tags, people, location, dates, and a completeness score",
-      "Automatic follow-up reminders (SMS via Twilio and web push) on a smart cadence for any event that finalizes below a 75% completeness score",
-      "Three distinct search modes: live keyword SQL search, semantic search using OpenAI embeddings ranked by pgvector cosine distance, and an AI search mode where Claude answers directly with citations back to source events",
-      "An event dashboard (/events) with filtering and a \"needs attention\" strip, plus a detail view with the full transcript, structured fields, and file attachments",
-      "File attachment support (images, HEIC/HEIF, PDFs, documents) stored in Cloudflare R2 and linked to event records",
-      "Clerk-based Google OAuth, with user preferences synced to Postgres via webhooks",
+      {
+        title: "Conversational logging",
+        problem: "Capturing a memory in forms was too much friction in the moment.",
+        fix: "Claude interviews one question at a time, then finalizes summary, fields, tags, people, location, dates, and a completeness score — one-shot summaries missed who/when/where too often.",
+        result: "Events land as structured records without a blank form.",
+      },
+      {
+        title: "Follow-up reminders",
+        problem: "Incomplete events stayed incomplete and memories faded.",
+        fix: "SMS via Twilio and web-push reminders when completeness is below 75%.",
+        result: "Thin records got a prompt to fill in before they went stale.",
+      },
+      {
+        title: "Three search modes",
+        problem: "Keyword search fails when you remember the gist, not the words.",
+        fix: "Live SQL keyword, pgvector semantic search, and Claude answers with citations.",
+        result: "You can find an event by exact words, meaning, or a question.",
+      },
+      {
+        title: "Event dashboard",
+        problem: "Logged events had no place to scan, filter, or reopen.",
+        fix: "`/events` with filters, a needs-attention strip, and a transcript detail view.",
+        result: "Incomplete and complete events are visible in one list.",
+      },
+      {
+        title: "File attachments",
+        problem: "Memories often include photos and documents, not just text.",
+        fix: "Images, HEIC/HEIF, PDFs, and docs stored in Cloudflare R2 and linked to events.",
+        result: "Evidence sits with the event instead of in a separate folder.",
+      },
+      {
+        title: "Google OAuth",
+        problem: "Preferences and events needed to follow a signed-in user.",
+        fix: "Clerk Google OAuth with preferences synced to Postgres via webhooks.",
+        result: "Account state survives across sessions without a custom auth stack.",
+      },
     ],
     outcome:
-      "Live and in active use for my own event logging. The three-mode search system (keyword, semantic, AI-with-citations) was the most technically interesting part to get right — each mode trades off speed, recall, and precision differently.",
+      "In active personal use; still in progress. Interview-then-finalize and three search modes (keyword, semantic, AI-with-citations) are built — search quality across modes is not instrumented yet; that's the main open gap.",
     links: {
       live: "https://exactrecall.com",
       github: "https://github.com/zeckdude/recall",
@@ -431,7 +962,7 @@ export const projects: Project[] = [
     title: "Tag My Web",
     badge: "personal",
     category: "personal-freelance",
-    dates: "Dates to be confirmed",
+    dates: "2025 – Present",
     tagline: "A YouTube subscription tagging and organization tool for power users managing large channel libraries.",
     techStack: ["Next.js", "MUI", "Turso", "TypeScript", "Resend"],
     overview:
@@ -439,11 +970,33 @@ export const projects: Project[] = [
     problem:
       "YouTube's native tools for organizing subscriptions are minimal — no tagging, no custom categories, no filtering by topic. Power users following hundreds of channels have no good way to organize or navigate their subscriptions beyond one long alphabetical list.",
     whatIBuilt: [
-      "OAuth connection to the YouTube Data API v3 to sync a user's full subscription list, including profile images, names, and subscriber counts",
-      "A tagging system for categorizing channels, with multi-tag AND/OR filtering",
-      "One-click access from any account card straight to that channel on YouTube",
-      "Turso (SQLite at the edge) as the data layer and Resend for transactional email",
+      {
+        title: "YouTube subscription sync",
+        problem: "Subscriptions lived only inside YouTube, with no way to work with the full list.",
+        fix: "OAuth to YouTube Data API v3 with pagination, quota-aware sync, and token refresh.",
+        result: "The user's full channel list was available to tag and filter without blowing API limits.",
+      },
+      {
+        title: "Channel tagging",
+        problem: "YouTube offers no tags, categories, or topic filters on subscriptions.",
+        fix: "Multi-tag AND/OR filtering on channels.",
+        result: "Hundreds of channels could be sliced by topic instead of one alphabetical list.",
+      },
+      {
+        title: "One-click channel access",
+        problem: "Organizing channels is useless if getting back to YouTube takes extra steps.",
+        fix: "One-click from any account card to that channel on YouTube.",
+        result: "Organization didn't add friction to actually watching.",
+      },
+      {
+        title: "Turso and Resend",
+        problem: "The app needed a data layer and transactional email without a heavy backend.",
+        fix: "Turso (SQLite at the edge) plus Resend for email.",
+        result: "Tags persist at the edge and email has a dedicated path.",
+      },
     ],
+    outcome:
+      "Live at tagmyweb.com — I use it occasionally for my own subscriptions. Built for power users who need tags and filters YouTube doesn't offer. No other users or usage metric claimed.",
     links: {
       live: "https://tagmyweb.com",
       github: "https://github.com/zeckdude/youtube-account-tagger",
@@ -455,7 +1008,7 @@ export const projects: Project[] = [
     badge: "personal",
     category: "personal-freelance",
     dates: "2025 – Present",
-    tagline: "A Chrome extension sidebar that organizes your LinkedIn recruiter conversations so nothing falls through the cracks.",
+    tagline: "Product direction for a LinkedIn job-search organizer — problem, solution design, and AI-directed build; still in progress.",
     techStack: [
       "Chrome Extension (MV3)",
       "React",
@@ -468,19 +1021,49 @@ export const projects: Project[] = [
       "BullMQ",
     ],
     overview:
-      "Job searching means juggling dozens of recruiter conversations at once — different stages, different companies, different follow-up timelines. HuntCalm injects a sidebar directly into LinkedIn (rendered in a shadow DOM so it never conflicts with LinkedIn's own styles) that gives job seekers a clear, organized view of every recruiter thread: what's pinned, what's tagged, what needs follow-up, and what's gone quiet. It was built out of personal frustration during my own job search after being laid off from Aerospike.",
+      "Job searching means juggling dozens of recruiter conversations — different stages, companies, and follow-up timelines. I identified the problem during my own active job search, designed the solution (sidebar in LinkedIn, pin/tag/search/reminders, cross-device sync), and directed an AI-assisted build of the Chrome extension and API. I did not hand-write the implementation myself — this project showcases product thinking, problem framing, and AI-directed delivery as much as traditional FE craft.",
     problem:
       "LinkedIn's native messaging interface isn't built for job seekers — it's built for recruiters. There's no way to see all your active conversations at a glance, tag or annotate them, track where each one stands, or get reminded to follow up. Important conversations get buried and opportunities slip through.",
+    myRole: {
+      title: "Product owner & AI-directed builder",
+      context: "Personal side project during job search; implementation via AI-assisted development.",
+      scope:
+        "Problem discovery, solution design, architecture direction, and iteration on the extension + API — not solo hand-coded implementation.",
+    },
     whatIBuilt: [
-      "A Chrome MV3 extension with a React sidebar injected into LinkedIn, toggled by keyboard shortcut or a floating button",
-      "Pin, search, and tag conversations, with a default tag set (Promising, Follow Up, Waiting, Not a Fit, Offer/Interview) and multi-tag AND/OR filtering",
-      "Per-conversation notes and a stats bar (total tracked, pinned count, reminders due, tag breakdown)",
-      "A recurring reminder system with flexible cadences (3 days, weekly, biweekly, monthly, or custom) that fires native Chrome notifications linking straight back to the thread",
-      "A TypeScript monorepo split into an extension app (Vite + React), an Express/Drizzle/PostgreSQL API, and a shared types package",
-      "Clerk authentication so conversations, tags, notes, and reminders sync across devices",
+      {
+        title: "Problem → solution design",
+        problem: "Recruiter threads on LinkedIn have no job-seeker workflow — pins, tags, or follow-ups.",
+        fix: "Defined the product: MV3 sidebar in LinkedIn, conversation triage, reminders, Clerk sync across devices.",
+        result: "A clear spec an AI-assisted build could execute against.",
+      },
+      {
+        title: "AI-directed implementation",
+        problem: "Shipping a full extension + API solo by hand would have been slow during an active job search.",
+        fix: "Directed AI to build the Chrome MV3 React sidebar, Express/Drizzle API, and shared TypeScript types.",
+        result: "Working extension and backend without me claiming every line of code as hand-written.",
+      },
+      {
+        title: "Pin, search, and tags",
+        problem: "Threads get buried with no way to mark status or find them later.",
+        fix: "Pin, search, and tags (Promising, Follow Up, Waiting, Not a Fit, Offer/Interview) with AND/OR filters.",
+        result: "Conversations can be triaged instead of scrolled past.",
+      },
+      {
+        title: "Follow-up reminders",
+        problem: "Follow-ups slip because LinkedIn doesn't remind you.",
+        fix: "Recurring reminders (3 days, weekly, biweekly, monthly, or custom) via Chrome notifications that link back to the thread.",
+        result: "Quiet conversations surface before they go cold.",
+      },
+      {
+        title: "Cross-device sync",
+        problem: "Pins, tags, notes, and reminders were stuck on one browser.",
+        fix: "Clerk auth so that data syncs across devices.",
+        result: "The same conversation state follows you to another machine.",
+      },
     ],
     outcome:
-      "Core data model, REST API, and the extension sidebar (pin/tag/search/filter/notifications) are complete and working end to end. In-context LinkedIn thread tagging and scheduled email reminders are in active development ahead of a public launch.",
+      "Still in progress. Core sidebar, API, pin/tag/search, and notifications are working; in-context thread tagging and email reminders remain ahead of a public launch. Honest ownership: I found the problem and directed the build — not traditional solo FE implementation.",
     links: { github: "https://github.com/zeckdude/huntcalm" },
     featured: true,
   },
@@ -505,15 +1088,51 @@ export const projects: Project[] = [
     problem:
       "My Hotel Wedding needed to track unique user actions — page loads, button clicks, and other custom events across two distinct user types (hotel reps and brides/grooms) — then surface that data in reports their non-technical team could use to gauge how well the site was performing. Generic analytics tools couldn't model their specific two-sided marketplace or the custom actions they cared about.",
     whatIBuilt: [
-      "A PHP and JavaScript event-tracking layer that captured page loads, button clicks, and custom user actions, sending each one to a MySQL database over AJAX with rich contextual metadata",
-      "A Users dashboard with a custom date-range picker (presets like Today, Last 7 Days, Last 30 Days, plus arbitrary custom ranges) charting activity trends split by user type",
-      "A Hotels module with a 'Most Hotels by State' chart and a sortable, paginated table of every hotel, its rep, status, and page views",
-      "Drill-down hotel detail pages showing RFPs received, page views, and every bride/groom who viewed that hotel",
-      "A Finance module for logging and tracking client checks — payment status, check numbers, and paid/logged dates",
-      "Mobile-responsive admin views built on an MVC architecture (Laravel) so the client could check reports from any device",
+      {
+        title: "Event-tracking layer",
+        problem: "Generic analytics couldn't model this two-sided marketplace or its custom actions.",
+        fix: "PHP/JS tracking of page loads, clicks, and custom events into MySQL over AJAX. Small freelance client — not big-data scale; exact volume not remembered.",
+        result: "Hotel-rep and couple activity landed in a database the client owned.",
+      },
+      {
+        title: "Users dashboard",
+        problem: "The team couldn't see activity trends split by user type over a chosen range.",
+        fix: "Users dashboard with presets and custom date ranges, charted by user type.",
+        result: "Non-technical staff could read who was active and when.",
+      },
+      {
+        title: "Hotels module",
+        problem: "Hotel inventory, reps, status, and views were not visible as a working list.",
+        fix: "Most Hotels by State chart plus a sortable, paginated hotel table.",
+        result: "The team could scan the marketplace geographically and by property.",
+      },
+      {
+        title: "Hotel drill-downs",
+        problem: "Aggregate hotel stats hid who viewed a property and which RFPs came in.",
+        fix: "Detail pages for RFPs, page views, and every bride/groom who viewed that hotel.",
+        result: "Each hotel had an audit trail, not just a count.",
+      },
+      {
+        title: "Finance module",
+        problem: "Client checks were tracked outside the same system as usage.",
+        fix: "Finance module for payment status, check numbers, and paid/logged dates.",
+        result: "Billing status sat next to the activity that justified it.",
+      },
+      {
+        title: "Mobile-responsive admin",
+        problem: "Reports were useless if they only worked on a desktop in the office.",
+        fix: "Mobile-responsive Laravel MVC admin views.",
+        result: "The client could check reports from any device.",
+      },
+      {
+        title: "Laravel analytics admin",
+        problem: "The client needed custom dashboards; I wanted to build that layer in Laravel.",
+        fix: "Built analytics and admin reporting in Laravel — honest reason: I liked working with Laravel for that part of the site, not a forced incremental migration story.",
+        result: "Custom reports the WordPress public site couldn't have produced off the shelf.",
+      },
     ],
     outcome:
-      "Gave a non-technical client clear visibility into how their two-sided marketplace was actually being used, replacing guesswork with real usage data across hotels, reps, and couples.",
+      "Gave a non-technical client clear visibility into how their two-sided marketplace was being used — replaced guesswork with real data. No proven behavior change from a specific report; the win was they could finally see the numbers.",
     links: {},
     images: [
       "/projects/custom-analytics-platform/1-users-chart.png",
@@ -536,10 +1155,27 @@ export const projects: Project[] = [
     problem:
       "Most printable calendar tools either require an account, push you toward a paid tier for basic features, or produce calendars that don't match what you actually need. There's a gap for a genuinely free, friction-free tool that just works.",
     whatIBuilt: [
-      "A month-by-month calendar builder with a dedicated print-layout view separate from the editing UI",
-      "Zustand for calendar configuration state and Dexie (IndexedDB) so custom calendars persist locally across sessions without an account",
-      "Form-driven customization built with React Hook Form and Headless UI components",
+      {
+        title: "Print calendar builder",
+        problem: "Printable calendar tools mixed editing with a layout that didn't match paper.",
+        fix: "A month-by-month builder with a dedicated print-layout view and `@media print` styling — separate editor from print-ready output.",
+        result: "What you print is a separate, print-ready view, not a screenshot of the editor.",
+      },
+      {
+        title: "Local persistence",
+        problem: "Tools demanded an account — or lost work — just to keep a calendar.",
+        fix: "Zustand for config and Dexie (IndexedDB) so calendars persist locally with no account.",
+        result: "Custom calendars survive sessions without signup or a server.",
+      },
+      {
+        title: "Form-driven customization",
+        problem: "Layout and formatting needed to be editable without a cluttered custom UI.",
+        fix: "React Hook Form and Headless UI for the customization controls.",
+        result: "Options are form-driven and accessible instead of one-off widgets.",
+      },
     ],
+    outcome:
+      "Live and free at printcustomcalendar.com — built because most online calendar tools wanted a paid tier for basic printing. No usage metric claimed.",
     links: {
       live: "https://printcustomcalendar.com",
       github: "https://github.com/zeckdude/printable-calendar",

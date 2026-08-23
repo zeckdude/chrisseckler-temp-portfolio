@@ -13,16 +13,14 @@ export default function HomePage() {
   return (
     <>
       <ParallaxHero className="relative overflow-hidden px-6 pt-28 pb-32 sm:pt-36 sm:pb-40">
-        <ParallaxLayer depth={0.02} className="pointer-events-none absolute inset-0 -z-20">
-          <div className="absolute top-[-160px] left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full bg-accent-dim opacity-50 blur-[120px]" />
-        </ParallaxLayer>
+        <ParallaxLayer depth={0.02} className="hero-atmosphere pointer-events-none absolute inset-0 -z-20" />
 
         <ParallaxLayer
           depth={0.05}
-          className="pointer-events-none absolute inset-0 -z-10 opacity-20"
+          className="pointer-events-none absolute inset-0 -z-10 opacity-20 light:opacity-50"
           style={{
             backgroundImage:
-              "radial-gradient(var(--color-border) 1px, transparent 1px)",
+              "radial-gradient(var(--hero-grid-dot) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
           }}
         />
@@ -110,7 +108,10 @@ export default function HomePage() {
               <Button href="/projects" variant="ghost">
                 See all projects
               </Button>
-              <Button href="/freelance">Hire me</Button>
+              <Button href="/freelance">Freelance</Button>
+              <Button href="/full-time" variant="ghost">
+                Full-time
+              </Button>
               <Button href="/contact" variant="ghost" event="contact intent" eventProps={{ source: "home-footer" }}>Get in touch</Button>
             </div>
           </div>

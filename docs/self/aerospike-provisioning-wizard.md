@@ -1,6 +1,6 @@
 # Aerospike Cloud Console — Provisioning Wizard Feature Breakdown
 
-> A feature-by-feature breakdown of the cluster provisioning wizard Chris owned as sole front-end engineer on the Aerospike Cloud team. Each entry pairs the user/business problem with the technical solution implemented.
+> A feature-by-feature breakdown of the cluster provisioning wizard Chris architected on the Aerospike Cloud team — he planned the overall flow, built many of its pages, and other frontend engineers shipped additional wizard and console work following those patterns. Each entry pairs the user/business problem with the technical solution implemented.
 
 ---
 
@@ -8,7 +8,7 @@
 
 The provisioning wizard is the revenue-critical flow in the Aerospike Cloud Console — the multi-step process where a prospect configures and creates their first database cluster. A trial becoming a paying customer happens here. When Chris arrived, the flow was fragmented, stateless on page refresh, and running alongside a separate legacy admin console (ACMS) that hadn't been unified into the main platform.
 
-**Business problem:** Enterprise customers were dropping off mid-setup, which meant lost revenue. Chris owned fixing it — architecture, delivery, testing, and the migration from the legacy console.
+**Business problem:** Enterprise customers were dropping off mid-setup, which meant lost revenue. Chris architected the wizard, built many of its pages, and drove testing and legacy integration while the Cloud FE team shipped against those patterns during the ACMS migration.
 
 ---
 
@@ -32,13 +32,13 @@ The provisioning wizard is the revenue-critical flow in the Aerospike Cloud Cons
 
 ## Business Outcomes
 
-- The unified flow drove successful enterprise migrations away from the legacy ACMS console during a live customer migration window
-- Persistent state across steps measurably reduced drop-off during provisioning
+- The unified flow drove successful enterprise migrations away from the legacy ACMS (Aerospike Cloud Managed Service) console during a live customer migration window
+- Customers reported that persistence meant they no longer lost the wizard on refresh or leaving the page, and could finish later — do not say “measurably”
 - The component architecture Chris introduced became the foundation for subsequent Cloud UI work — it outlasted his tenure
-- Chris also mentored two junior front-end engineers on the team and introduced AI-assisted development workflows — the first person to bring that practice to Aerospike engineering
+- Chris also mentored two junior front-end engineers on component patterns and testing; they shipped later Cloud UI work using those patterns.
 
 ---
 
 ## Tech Stack
 
-React · TypeScript · React Context · Material UI · Vitest · Playwright · GraphQL
+React · TypeScript · React Context · Material UI · REST APIs · Vitest · Playwright

@@ -16,7 +16,7 @@ export const home = {
 export const about = {
   headline: "15 years of shipping. Still building.",
   bio: [
-    "I'm a Senior Frontend Engineer with 15+ years of experience building products that scale — from a language learning Chrome extension with 1M+ users (Toucan, Employee #1) to enterprise cloud consoles for distributed databases (Aerospike). I specialize in React, TypeScript, and Next.js, and I'm deep in the world of AI engineering: currently enrolled in the Newline AI Engineering Bootcamp, studying LLM architecture, RAG pipelines, embeddings, and multimodal systems.",
+    "I'm a Senior Frontend Engineer with 15+ years of experience building products that scale — from a language learning Chrome extension with 1M+ users (Toucan, early engineer) to enterprise cloud consoles for distributed databases (Aerospike). I specialize in React, TypeScript, and Next.js, and I'm deep in the world of AI engineering: currently enrolled in the Newline AI Engineering Bootcamp, studying LLM architecture, RAG pipelines, embeddings, and multimodal systems.",
     "I build side projects the way most people watch TV. If something frustrates me, I build a fix for it.",
     "I'm an OIF Army Reserve veteran, based in Las Vegas, and open to senior IC, founding engineer, and AI-forward roles — remote or Las Vegas-based.",
   ],
@@ -33,14 +33,14 @@ export const about = {
     { org: "Trailer Park", role: "Web Developer → Production Manager", detail: "Nov 2010–Oct 2014" },
     { org: "Chrome River", role: "Software Engineer, Front End", detail: "Dec 2015–Mar 2018" },
     { org: "Dave.com", role: "Full Stack → Senior Front-End Engineer", detail: "200K → 4M+ users; unicorn" },
-    { org: "Toucan", role: "Founding Engineer, Employee #1", detail: "0 → 1M+ users, 13M page views" },
+    { org: "Toucan", role: "Senior Software Engineer I → II (early engineer)", detail: "Architected Next.js site; extension year 1" },
     { org: "Adim", role: "Senior Frontend Engineer", detail: "May 2023–Mar 2024" },
     { org: "Aerospike", role: "Senior Frontend Engineer, Cloud Team", detail: "Sep 2024–Jan 2026" },
     { org: "Now", role: "Building, learning AI, open to what's next" },
   ],
 };
 
-export const employed = {
+export const fullTime = {
   hero: {
     headline: "Senior frontend engineer. Ready for the right team.",
     subtext:
@@ -50,7 +50,7 @@ export const employed = {
 
   stats: [
     { value: "15+", label: "Years shipping production code", subtext: "At every stage: startup, scale-up, and enterprise." },
-    { value: "1M+", label: "Users on a product I joined as Employee #1", subtext: "Built from nothing. Grew to 30 engineers." },
+    { value: "1M+", label: "Users on a product I joined as an early engineer", subtext: "Architected the web platform; company grew to 30 engineers." },
     { value: "4M+", label: "Users reached at a pre-unicorn startup", subtext: "Real scale, real pressure, real stakes." },
     { value: "2", label: "Junior engineers mentored at my last role", subtext: "Architectural patterns I taught are still in the codebase." },
   ],
@@ -59,15 +59,15 @@ export const employed = {
     capabilities: [
       {
         name: "Full ownership of frontend surfaces",
-        body: "I don't just implement tickets — I architect, deliver, test, and maintain. At Aerospike I was the only frontend engineer on the entire Cloud team. The product had no handoffs. Neither did I.",
+        body: "I don't just implement tickets — I architect, deliver, test, and maintain. At Aerospike I planned the provisioning wizard architecture and built many of its pages; other frontend engineers on the Cloud team shipped additional wizard and console work following those patterns.",
       },
       {
         name: "Founding-engineer judgment",
-        body: "I've picked the stack before there was a stack. At Toucan I made the early technical decisions that had to last through 1M users. I know what good calls look like under uncertainty.",
+        body: "I've picked the stack before there was a stack. At Toucan I architected the Next.js site from scratch and took over a scrappy extension prototype in year one — early technical decisions that had to last through 1M users.",
       },
       {
         name: "AI-assisted development workflows",
-        body: "I introduced LLM-powered IDE tooling at Aerospike — the first person to bring that practice to the engineering team. I don't just use these tools; I figure out how to make a whole team faster with them.",
+        body: "I use LLM-powered IDE tooling daily for research, implementation, and review. Comfortable folding AI into how I ship — without treating it as a substitute for judgment on product and architecture.",
       },
       {
         name: "Design system & component architecture",
@@ -94,14 +94,14 @@ export const employed = {
     {
       org: "Aerospike",
       role: "Senior Frontend Engineer, Cloud Team",
-      headline: "Sole FE owner. Revenue-critical surface. No handoffs.",
-      body: "Cross-functional team with backend engineers and product — no other frontend engineers. I owned the provisioning wizard (where trials become paying customers) end to end: architecture, delivery, testing, legacy integration, and mentorship.",
+      headline: "Wizard architecture lead. Revenue-critical surface. Team shipped against those patterns.",
+      body: "Cross-functional Cloud team with other frontend engineers, backend engineers, and product. I architected the provisioning wizard (where trials become paying customers) and built many of its pages; the team shipped the rest against those patterns — plus testing, legacy integration, and mentorship.",
     },
     {
       org: "Toucan",
-      role: "Founding Engineer, Employee #1",
-      headline: "Zero to product. Zero to team. Zero to 1M+ users.",
-      body: "Joined pre-product. Made the early technical decisions that had to last. Built the Chrome extension from nothing alongside the founders and shipped the product that grew to 30 engineers and over a million users.",
+      role: "Senior Software Engineer I → II (early engineer)",
+      headline: "Early engineer. Architected the web platform.",
+      body: "Joined at inception with a small engineering cohort. Took over the extension from a CTO prototype in year one and built the Next.js site from scratch. The company grew to 30 employees and 1M+ users.",
     },
     {
       org: "Dave.com",
@@ -148,6 +148,58 @@ export const employed = {
 export const contact = {
   headline: "Let's talk.",
   body: "Whether you have a project in mind, a role to discuss, or just want to connect — reach out. I respond to everything.",
+  hire: {
+    headline: "Work with me",
+    links: [
+      { href: "/freelance", label: "Freelance", description: "Project-based engagements" },
+      { href: "/full-time", label: "Full-time", description: "Senior IC and founding roles" },
+    ],
+  },
+};
+
+export type FooterLink = {
+  href: string;
+  label: string;
+  description?: string;
+  external?: boolean;
+  event?: "resume downloaded";
+};
+
+export const footer = {
+  sections: [
+    {
+      title: "Explore",
+      links: [
+        { href: "/projects", label: "Projects", description: "Case studies and shipped work" },
+        { href: "/about", label: "About", description: "Background, stack, and timeline" },
+        {
+          href: "/recommendations",
+          label: "Recommendations",
+          description: "28 LinkedIn recommendations from colleagues",
+        },
+      ] satisfies FooterLink[],
+    },
+    {
+      title: "Work with me",
+      links: [
+        { href: "/freelance", label: "Freelance", description: "Project-based engagements" },
+        { href: "/full-time", label: "Full-time", description: "Senior IC and founding roles" },
+        { href: "/contact", label: "Contact", description: "Start a conversation" },
+        {
+          href: "/resume.pdf",
+          label: "Resume",
+          description: "PDF download",
+          external: true,
+          event: "resume downloaded",
+        },
+      ] satisfies FooterLink[],
+    },
+  ] as const,
+  social: [
+    { href: siteConfig.email, label: "Email", kind: "email" as const, mailto: true },
+    { href: siteConfig.linkedin, label: "LinkedIn", kind: "linkedin" as const },
+    { href: siteConfig.github, label: "GitHub", kind: "github" as const },
+  ],
 };
 
 export const freelance = {
@@ -160,7 +212,7 @@ export const freelance = {
 
   stats: [
     { value: "15+", label: "Years of professional experience", subtext: "No junior mistakes on your dime." },
-    { value: "1M+", label: "Users on a product I joined as Employee #1", subtext: "I know how to build from zero and scale." },
+    { value: "1M+", label: "Users on a product I joined as an early engineer", subtext: "I know how to build from zero and scale." },
     { value: "4M+", label: "Users reached at a unicorn startup", subtext: "I've worked at every company size." },
     { value: "< 24h", label: "Typical first response time", subtext: "You won't be left wondering." },
   ],
@@ -282,8 +334,8 @@ export const freelance = {
   proof: [
     {
       org: "Toucan",
-      headline: "Employee #1. 0 → 1M+ users.",
-      body: "Joined pre-product as the founding engineer and built the Chrome extension from nothing. Grew alongside the product to 30 employees and over a million users.",
+      headline: "Early engineer. Architected the web platform.",
+      body: "Took over a scrappy extension prototype and built the Next.js site from scratch in year one. The company grew to 30 employees and over a million users.",
     },
     {
       org: "Dave.com",
@@ -292,8 +344,8 @@ export const freelance = {
     },
     {
       org: "Aerospike",
-      headline: "Sole frontend engineer on a revenue-critical enterprise product.",
-      body: "Owned the provisioning wizard — the flow where trials become paying customers — end to end. No handoffs, high stakes.",
+      headline: "Architected the provisioning wizard on a revenue-critical enterprise product.",
+      body: "Planned the wizard flow architecture and built many of its pages; other Cloud frontend engineers shipped additional wizard and console work following those patterns. High stakes during a live ACMS migration.",
     },
   ],
 

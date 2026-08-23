@@ -10,15 +10,27 @@ import { useChatContext } from "@/lib/chat-context";
 import { cn } from "@/lib/utils";
 
 const BADGE_LABELS: Record<BadgeType, string> = {
-  professional: "Employed",
+  professional: "Full-time",
   personal:     "Personal Project",
   freelance:    "Freelance",
 };
 
 const BADGE_STYLES: Record<BadgeType, { active: string; inactive: string }> = {
-  professional: { active: "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-600", inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary" },
-  personal:     { active: "bg-sky-950     text-sky-400     ring-1 ring-sky-600",      inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary" },
-  freelance:    { active: "bg-amber-950   text-amber-400   ring-1 ring-amber-600",    inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary" },
+  professional: {
+    active:
+      "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-600 light:bg-emerald-100 light:text-emerald-800 light:ring-emerald-200",
+    inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary",
+  },
+  personal: {
+    active:
+      "bg-sky-950 text-sky-400 ring-1 ring-sky-600 light:bg-sky-100 light:text-sky-800 light:ring-sky-200",
+    inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary",
+  },
+  freelance: {
+    active:
+      "bg-amber-950 text-amber-400 ring-1 ring-amber-600 light:bg-amber-100 light:text-amber-800 light:ring-amber-200",
+    inactive: "text-text-secondary ring-1 ring-border hover:text-text-primary",
+  },
 };
 
 /** Build a human-readable description of what the AI is currently showing. */

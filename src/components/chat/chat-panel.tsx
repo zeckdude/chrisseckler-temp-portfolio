@@ -50,7 +50,7 @@ function loadStoredMessages() {
 type NavLink = { label: string; url: string };
 
 const BADGE_LABELS: Record<BadgeType, string> = {
-  professional: "Employed",
+  professional: "Full-time",
   personal:     "Personal Project",
   freelance:    "Freelance",
 };

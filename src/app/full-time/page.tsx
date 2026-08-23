@@ -4,26 +4,27 @@ import Button from "@/components/ui/button";
 import Magnetic from "@/components/motion/magnetic";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { TechChip } from "@/components/ui/tech-chip";
-import { employed, about } from "@/lib/content";
+import RecommendationsTeaser from "@/components/recommendations-teaser";
+import { fullTime, about } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Join Your Team — Senior Frontend Engineer",
+  title: "Full-time — Senior Frontend Engineer",
   description:
     "Senior frontend engineer actively looking for the right team. 15+ years at every company stage. React, TypeScript, Next.js, AI. Remote or Las Vegas.",
 };
 
-export default function EmployedPage() {
+export default function FullTimePage() {
   return (
     <div className="mx-auto max-w-content px-6">
 
       {/* ── 1. HERO ───────────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
-        <div className="pointer-events-none absolute -top-25 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full bg-accent-dim opacity-40 blur-[100px]" />
+        <div className="pointer-events-none absolute -top-25 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full bg-hero-glow opacity-40 blur-[100px] light:opacity-30" />
 
         <Reveal>
           <div className="mb-6 flex items-center gap-2.5">
             <span className="inline-block h-2 w-2 rounded-full bg-accent" />
-            <span className="text-sm font-medium text-accent">{employed.hero.badge}</span>
+            <span className="text-sm font-medium text-accent">{fullTime.hero.badge}</span>
           </div>
         </Reveal>
 
@@ -32,23 +33,23 @@ export default function EmployedPage() {
             className="text-balance font-display font-extrabold tracking-tight text-text-primary"
             style={{ fontSize: "clamp(2.25rem, 5vw, 3rem)", letterSpacing: "-0.03em" }}
           >
-            {employed.hero.headline}
+            {fullTime.hero.headline}
           </h1>
         </Reveal>
 
         <Reveal>
           <p className="mt-6 max-w-2xl text-lg text-text-secondary sm:text-xl">
-            {employed.hero.subtext}
+            {fullTime.hero.subtext}
           </p>
         </Reveal>
 
         <Reveal>
           <div className="mt-10 flex flex-wrap gap-4">
             <Magnetic>
-              <Button href={employed.cta.resumeUrl} external event="resume downloaded">Download Resume</Button>
+              <Button href={fullTime.cta.resumeUrl} external event="resume downloaded">Download Resume</Button>
             </Magnetic>
             <Magnetic>
-              <Button href="/contact" variant="ghost" event="contact intent" eventProps={{ source: "employed" }}>Get in touch</Button>
+              <Button href="/contact" variant="ghost" event="contact intent" eventProps={{ source: "full-time" }}>Get in touch</Button>
             </Magnetic>
             <Magnetic>
               <Button href="https://linkedin.com/in/chrisseckler" variant="ghost" external>
@@ -62,7 +63,7 @@ export default function EmployedPage() {
       {/* ── 2. AT A GLANCE — stats ────────────────────────────────── */}
       <section className="py-6">
         <RevealGroup className="grid grid-cols-2 gap-px overflow-hidden rounded-md border border-border bg-border lg:grid-cols-4">
-          {employed.stats.map((stat) => (
+          {fullTime.stats.map((stat) => (
             <Reveal key={stat.value}>
               <div className="flex h-full flex-col gap-1.5 bg-surface px-6 py-8">
                 <span className="font-display text-3xl font-extrabold text-accent sm:text-4xl">
@@ -93,7 +94,7 @@ export default function EmployedPage() {
           </p>
         </Reveal>
         <RevealGroup className="mb-14 grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-2">
-          {employed.brings.capabilities.map((item) => (
+          {fullTime.brings.capabilities.map((item) => (
             <Reveal key={item.name}>
               <div className="flex h-full flex-col gap-2 bg-surface px-6 py-7">
                 <h3 className="font-display font-bold text-text-primary">{item.name}</h3>
@@ -109,7 +110,7 @@ export default function EmployedPage() {
           </p>
         </Reveal>
         <RevealGroup className="grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-3">
-          {employed.brings.workingStyle.map((item) => (
+          {fullTime.brings.workingStyle.map((item) => (
             <Reveal key={item.name}>
               <div className="flex h-full flex-col gap-2 bg-surface px-6 py-7">
                 <h3 className="font-display font-bold text-text-primary">{item.name}</h3>
@@ -132,7 +133,7 @@ export default function EmployedPage() {
         </Reveal>
 
         <RevealGroup className="grid gap-6 sm:grid-cols-3">
-          {employed.proof.map((item) => (
+          {fullTime.proof.map((item) => (
             <Reveal key={item.org}>
               <div className="flex h-full flex-col gap-3 rounded-md border border-border bg-surface px-6 py-7">
                 <div>
@@ -205,7 +206,7 @@ export default function EmployedPage() {
                 Good fit
               </p>
               <ul className="space-y-3">
-                {employed.fit.good.map((item) => (
+                {fullTime.fit.good.map((item) => (
                   <li key={item} className="flex gap-2.5 text-sm text-text-secondary">
                     <span className="mt-0.5 shrink-0 text-accent">↗</span>
                     {item}
@@ -221,7 +222,7 @@ export default function EmployedPage() {
                 Not a fit
               </p>
               <ul className="space-y-3">
-                {employed.fit.notFit.map((item) => (
+                {fullTime.fit.notFit.map((item) => (
                   <li key={item} className="flex gap-2.5 text-sm text-text-secondary">
                     <span className="mt-0.5 shrink-0 text-text-secondary/40">—</span>
                     {item}
@@ -238,7 +239,7 @@ export default function EmployedPage() {
               Open to
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {employed.fit.openTo.map((role) => (
+              {fullTime.fit.openTo.map((role) => (
                 <div key={role.label} className="rounded border border-border px-4 py-4">
                   <p className="font-display font-bold text-text-primary">{role.label}</p>
                   <p className="mt-1 text-xs text-text-secondary">{role.note}</p>
@@ -257,7 +258,7 @@ export default function EmployedPage() {
               <div className="mb-3 flex items-center gap-2.5">
                 <span className="inline-block h-2 w-2 rounded-full bg-accent" />
                 <span className="text-sm font-semibold text-accent">
-                  {employed.availability.status}
+                  {fullTime.availability.status}
                 </span>
               </div>
               <h2 className="font-display text-2xl font-extrabold text-text-primary sm:text-3xl">
@@ -270,39 +271,41 @@ export default function EmployedPage() {
                 <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary/60">
                   Location
                 </p>
-                <p className="text-sm text-text-secondary">{employed.availability.location}</p>
+                <p className="text-sm text-text-secondary">{fullTime.availability.location}</p>
               </div>
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary/60">
                   Compensation
                 </p>
-                <p className="text-sm text-text-secondary">{employed.availability.comp}</p>
+                <p className="text-sm text-text-secondary">{fullTime.availability.comp}</p>
               </div>
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary/60">
                   Timeline
                 </p>
-                <p className="text-sm text-text-secondary">{employed.availability.note}</p>
+                <p className="text-sm text-text-secondary">{fullTime.availability.note}</p>
               </div>
             </div>
           </div>
         </Reveal>
       </section>
 
+      <RecommendationsTeaser />
+
       {/* ── 8. CTA ────────────────────────────────────────────────── */}
       <section className="py-20">
         <Reveal>
           <div className="flex flex-col items-center gap-6 rounded-md border border-border bg-surface p-10 text-center sm:p-16">
             <h2 className="font-display text-2xl font-extrabold text-text-primary sm:text-3xl">
-              {employed.cta.headline}
+              {fullTime.cta.headline}
             </h2>
-            <p className="max-w-md text-text-secondary">{employed.cta.subtext}</p>
+            <p className="max-w-md text-text-secondary">{fullTime.cta.subtext}</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Magnetic>
-                <Button href={employed.cta.resumeUrl} external event="resume downloaded">Download Resume</Button>
+                <Button href={fullTime.cta.resumeUrl} external event="resume downloaded">Download Resume</Button>
               </Magnetic>
               <Magnetic>
-                <Button href="/contact" variant="ghost" event="contact intent" eventProps={{ source: "employed" }}>Get in touch</Button>
+                <Button href="/contact" variant="ghost" event="contact intent" eventProps={{ source: "full-time" }}>Get in touch</Button>
               </Magnetic>
               <Magnetic>
                 <Button

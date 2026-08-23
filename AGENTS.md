@@ -32,3 +32,14 @@ Rules:
 - Do not fire named events for ops/admin UI.
 
 If you add a new public interaction (CTA, gallery, form, chat action), add a named event unless an existing one already covers it.
+
+# Company / product knowledge (interview prep)
+
+Chris will later get a **teach + quiz + checklist** page per company (what they sell, problems they faced, how he helped, with links). **Do not build that page until he asks.**
+
+**Every session must:**
+1. Treat [`docs/self/company-knowledge/`](docs/self/company-knowledge/README.md) as the index. One file per employer (start with `aerospike.md`).
+2. When you learn anything about an employer’s products, architecture, glossary, public docs, or how Chris’s work maps onto them — **write it into that folder in the same session**. Do not leave it only in chat.
+3. Separate public product truth from Chris’s ownership. Mark inferences. Never invent metrics.
+4. Keep company files consistent with `CHRIS.md`.
+5. Add useful links as you find them. If Chris is fuzzy on a name (e.g. ACMS), research the official term and record both.

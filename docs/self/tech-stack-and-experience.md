@@ -25,7 +25,7 @@ Confident and in daily use. Leans on it for type safety and better developer exp
 **Jest, Testing Library, Vitest, Playwright.** Writes tests as part of the craft, not as an afterthought.
 
 ### AI Tooling
-**Cursor, Claude API, other LLMs.** Uses AI for research, feedback, and coding assistance. Comfortable integrating AI into engineering workflow. Was the first engineer to bring AI-assisted development practices to the Aerospike engineering team.
+**Cursor, Claude API, other LLMs.** Uses AI for research, feedback, and coding assistance in daily work. Comfortable integrating AI into engineering workflow.
 
 ---
 

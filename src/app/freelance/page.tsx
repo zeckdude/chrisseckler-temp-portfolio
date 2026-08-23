@@ -4,6 +4,7 @@ import Button from "@/components/ui/button";
 import Magnetic from "@/components/motion/magnetic";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { TechChip } from "@/components/ui/tech-chip";
+import RecommendationsTeaser from "@/components/recommendations-teaser";
 import { freelance, about } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default function FreelancePage() {
       {/* ── 1. HERO ───────────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
         {/* accent glow — same visual treatment as homepage */}
-        <div className="pointer-events-none absolute -top-25 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full bg-accent-dim opacity-40 blur-[100px]" />
+        <div className="pointer-events-none absolute -top-25 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full bg-hero-glow opacity-40 blur-[100px] light:opacity-30" />
 
         <Reveal>
           <div className="mb-6 flex items-center gap-2.5">
@@ -313,6 +314,8 @@ export default function FreelancePage() {
           </Link>
         </Reveal>
       </section>
+
+      <RecommendationsTeaser />
 
       {/* ── 9. CTA ────────────────────────────────────────────────── */}
       <section className="py-20">

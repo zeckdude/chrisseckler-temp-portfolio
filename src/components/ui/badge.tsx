@@ -7,13 +7,16 @@ interface BadgeProps {
 }
 
 const badgeStyles: Record<BadgeType, string> = {
-  professional: "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-800",
-  freelance:    "bg-amber-950  text-amber-400  ring-1 ring-amber-800",
-  personal:     "bg-sky-950    text-sky-400    ring-1 ring-sky-800",
+  professional:
+    "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-800 light:bg-emerald-100 light:text-emerald-800 light:ring-emerald-200",
+  freelance:
+    "bg-amber-950 text-amber-400 ring-1 ring-amber-800 light:bg-amber-100 light:text-amber-800 light:ring-amber-200",
+  personal:
+    "bg-sky-950 text-sky-400 ring-1 ring-sky-800 light:bg-sky-100 light:text-sky-800 light:ring-sky-200",
 };
 
 const badgeLabels: Record<BadgeType, string> = {
-  professional: "Employed",
+  professional: "Full-time",
   freelance:    "Freelance",
   personal:     "Personal Project",
 };

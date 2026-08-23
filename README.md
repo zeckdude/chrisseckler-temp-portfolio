@@ -128,7 +128,7 @@ src/
       parallax-hero.tsx          Parallax scroll layers on the home hero
       reveal.tsx                 Scroll-triggered fade-in (Reveal / RevealGroup)
     ui/
-      badge.tsx                  Employment type chip (Employed / Freelance / Personal Project)
+      badge.tsx                  Employment type chip (Full-time / Freelance / Personal Project)
                                  Also exports CompanyChip (@ CompanyName)
       button.tsx                 Styled button variants
       icons.tsx                  Custom SVGs (GitHub, LinkedIn brand marks)
@@ -174,7 +174,7 @@ Edit `src/lib/projects.ts`. Each project is a typed `Project` object in the `pro
 | `techStack` | `string[]` | Shown as chips on the detail page |
 | `overview` | `string` | Lead paragraph on the detail page |
 | `problem` | `string?` | Optional "The Problem" section |
-| `whatIBuilt` | `string[]?` | Bullet list. Wrap code names in backticks: `` `ComponentName` `` → renders as `<code>` |
+| `whatIBuilt` | `WhatIBuiltItem[]?` | Each item is `{ title, problem, fix, result }`. Wrap code names in backticks: `` `ComponentName` `` → renders as `<code>` |
 | `outcome` | `string?` | Optional "Outcome / Impact" section |
 | `links.live` | `string?` | URL for the "Live Site" button |
 | `links.liveNote` | `string?` | Shown instead of a live button when the site is behind auth or gone |

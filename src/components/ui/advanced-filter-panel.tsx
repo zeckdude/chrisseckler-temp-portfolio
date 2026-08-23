@@ -13,7 +13,7 @@ interface Props {
 }
 
 const BADGE_LABELS: Record<BadgeType, string> = {
-  professional: "Employed",
+  professional: "Full-time",
   personal:     "Personal Project",
   freelance:    "Freelance",
 };
@@ -116,11 +116,16 @@ function FilterSection({ label, children }: { label: string; children: React.Rea
 type ColorClass = "emerald" | "amber" | "sky" | "violet" | "cyan";
 
 const activeClasses: Record<ColorClass, string> = {
-  emerald: "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-700",
-  amber:   "bg-amber-950  text-amber-400  ring-1 ring-amber-700",
-  sky:     "bg-sky-950    text-sky-400    ring-1 ring-sky-700",
-  violet:  "bg-violet-950 text-violet-400 ring-1 ring-violet-700",
-  cyan:    "bg-cyan-950   text-cyan-400   ring-1 ring-cyan-700",
+  emerald:
+    "bg-emerald-950 text-emerald-400 ring-1 ring-emerald-700 light:bg-emerald-100 light:text-emerald-800 light:ring-emerald-200",
+  amber:
+    "bg-amber-950 text-amber-400 ring-1 ring-amber-700 light:bg-amber-100 light:text-amber-800 light:ring-amber-200",
+  sky:
+    "bg-sky-950 text-sky-400 ring-1 ring-sky-700 light:bg-sky-100 light:text-sky-800 light:ring-sky-200",
+  violet:
+    "bg-violet-950 text-violet-400 ring-1 ring-violet-700 light:bg-violet-100 light:text-violet-800 light:ring-violet-200",
+  cyan:
+    "bg-cyan-950 text-cyan-400 ring-1 ring-cyan-700 light:bg-cyan-100 light:text-cyan-800 light:ring-cyan-200",
 };
 
 function Chip({
@@ -178,7 +183,7 @@ export function AdvancedFilterToggle({
       </svg>
       Filters
       {count > 0 && (
-        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-bold text-bg">
+        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-xs font-bold leading-none text-bg">
           {count}
         </span>
       )}

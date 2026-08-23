@@ -144,7 +144,7 @@ The palette is almost entirely neutral — three near-black/gray steps carry the
 ### Named Rules
 **The One Voice Rule.** Signal Blue is the system's only accent. If a new element needs emphasis, reach for Signal Blue before reaching for a new hue — the palette's restraint is itself a credibility signal for a site whose subject is engineering judgment.
 
-**The Quarantined Semantics Rule.** Five borrowed Tailwind hues — emerald (Employed), amber (Freelance), sky (Personal Project), violet (Company), cyan (Tech Stack) — exist only to color-code classification chips in `Badge`, `CompanyChip`, `TechChip`, and the filter panel. Always paired as a `-950` background with a `-400` text and a `-700`/`-800` ring. These hues never appear on buttons, links, or any primary-action surface.
+**The Quarantined Semantics Rule.** Five borrowed Tailwind hues — emerald (Full-time), amber (Freelance), sky (Personal Project), violet (Company), cyan (Tech Stack) — exist only to color-code classification chips in `Badge`, `CompanyChip`, `TechChip`, and the filter panel. Always paired as a `-950` background with a `-400` text and a `-700`/`-800` ring. These hues never appear on buttons, links, or any primary-action surface.
 
 ## Typography
 
@@ -197,7 +197,7 @@ Corner radius scales with how "conversational" a surface is. Structural content 
 - **Disabled:** shown as a translucent primary fill (`bg-accent/30`, `text-accent/50`) with a helper caption underneath rather than being hidden — used for project links awaiting a live URL.
 
 ### Chips (Badges & Tech Chips)
-- **Status badges:** `-950` background / `-400` text / `-700`–`-800` ring, one of the five quarantined semantic hues, 4px radius, `text-xs font-medium`. Label is a static role name ("Employed", "Freelance", "Personal Project"), not the raw enum value.
+- **Status badges:** `-950` background / `-400` text / `-700`–`-800` ring, one of the five quarantined semantic hues, 4px radius, `text-xs font-medium`. Label is a static role name ("Full-time", "Freelance", "Personal Project"), not the raw enum value.
 - **Tech chips:** neutral — Surface background, Hairline border, Ash text, JetBrains Mono, 4px radius. Unlike status badges, tech chips never carry color; color is reserved for classification, not for every tag.
 - **Filter chips:** same 5-hue vocabulary as status badges but rendered as toggleable pill buttons (`rounded-md`) with an `aria-pressed` state; inactive state drops to a plain Hairline ring with Ash text.
 

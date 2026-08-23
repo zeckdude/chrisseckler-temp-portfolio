@@ -328,7 +328,7 @@ export function ChatMarkdown({ text }: { text: string }) {
             <div key={key} className="my-3 overflow-x-auto rounded-lg border border-border/50 text-sm">
               <table className="w-full min-w-[320px] border-collapse">
                 <thead>
-                  <tr className="border-b border-border/50 bg-white/5">
+                  <tr className="border-b border-border/50 bg-white/5 light:bg-black/5">
                     {headers.map((h, ci) => (
                       <th key={ci} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-text-secondary whitespace-nowrap">
                         {parseSegment(h, `${key}-th${ci}`)}
@@ -338,7 +338,7 @@ export function ChatMarkdown({ text }: { text: string }) {
                 </thead>
                 <tbody>
                   {bodyRows.map((row, ri) => (
-                    <tr key={ri} className={ri % 2 === 1 ? "bg-white/3" : ""}>
+                    <tr key={ri} className={ri % 2 === 1 ? "bg-white/3 light:bg-black/3" : ""}>
                       {row.map((cell, ci) => (
                         <td key={ci} className="px-3 py-2 leading-relaxed align-top">
                           {parseSegment(cell, `${key}-td${ri}-${ci}`)}
