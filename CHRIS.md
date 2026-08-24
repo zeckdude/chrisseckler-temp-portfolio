@@ -125,11 +125,11 @@ I'm an OIF Army Reserve veteran, based in Las Vegas, and open to senior IC, foun
 
 #### Toucan — Browser Extension
 - **Company:** Toucan
-- **Dates:** Dec 2019 – Mar 2023 (extension: year 1)
+- **Dates:** Dec 2019 – Mar 2023
 - **Slug:** `toucan-browser-extension`
-- **What I built:** Took over extension from CTO/contractor prototype; sidebar, contextless learning moments, games; RFCs. Desktop browsers — not Chrome-only.
+- **What I built:** Extension sidebar shell; pause with duration options; saved words + practice quizzes; Toucan Tips; extension settings modules (language switcher, blocked sites, audio, hotkeys, delete account); RFCs. Desktop browsers — not Chrome-only.
 - **Note:** Mobile Safari = separate case study `toucan-safari-extension`.
-- **Live:** https://jointoucan.com
+- **Live:** https://chromewebstore.google.com/detail/toucan-by-babbel-language/lokjgaehpcnlmkebpmjiofccpklbmoci
 
 #### Toucan — Mobile Safari Extension Port
 - **Company:** Toucan
@@ -150,7 +150,7 @@ I'm an OIF Army Reserve veteran, based in Las Vegas, and open to senior IC, foun
 #### Adim — Design System & Platform Engineering
 - **Company:** Adim (TV/movie industry creative collaboration platform)
 - **Dates:** May 2023 – Mar 2024
-- **Slug:** `adim-placeholder`
+- **Slug:** `adim-platform`
 - **Role:** Senior Frontend Engineer
 - **Stack:** Next.js, TypeScript, Tailwind CSS, Storybook
 - **What I built:** Shared component library + design system (Next.js/TS); Storybook UI standards; refined Tailwind; FE process (PR template, FE-only meetings, proactive TD identification); marketing site redesign; stakeholder doc unblocking.

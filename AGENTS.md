@@ -33,6 +33,10 @@ Rules:
 
 If you add a new public interaction (CTA, gallery, form, chat action), add a named event unless an existing one already covers it.
 
+# Project media (`assets/project-media/**/originals/`)
+
+**Chris-only.** Agents must never read, write, copy, move, rename, or delete anything under any `originals/` folder. Chris manages masters there himself. Agents work only in `public/projects/<slug>/` (rename/add without editing pixels) and `src/lib/projects.ts`. Use `next/image` for multi-size delivery without modifying source files.
+
 # Company / product knowledge (interview prep)
 
 Chris will later get a **teach + quiz + checklist** page per company (what they sell, problems they faced, how he helped, with links). **Do not build that page until he asks.**

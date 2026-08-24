@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  images: {
+    qualities: [75, 85, 90, 100],
+    // Include project screenshot widths (~3456px masters) so the optimizer can downscale crisply
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3456, 3840],
+  },
   // PostHog ingest URLs use trailing slashes; without this, Next 308s them and events drop
   skipTrailingSlashRedirect: true,
   async redirects() {
@@ -27,6 +32,16 @@ const nextConfig: NextConfig = {
       {
         source: "/projects/dave-placeholder",
         destination: "/projects/dave-support-tooling",
+        permanent: true,
+      },
+      {
+        source: "/projects/adim-placeholder",
+        destination: "/projects/adim-platform",
+        permanent: true,
+      },
+      {
+        source: "/projects/chrome-river-placeholder",
+        destination: "/projects/chrome-river-expense-reporting",
         permanent: true,
       },
       {

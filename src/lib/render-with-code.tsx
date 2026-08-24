@@ -1,12 +1,15 @@
 /**
- * Renders a string that may contain `backtick-wrapped` tokens as a React
- * node, replacing each token with a <code> element styled to match the
- * site's dark-mode code aesthetic.
+ * Renders a string that may contain `backtick-wrapped` tokens and
+ * [markdown links](/path) as React nodes.
  */
-export function renderWithCode(text: string): React.ReactNode {
-  if (!text.includes("`")) return text;
+import Link from "next/link";
 
-  const parts = text.split(/(`[^`]+`)/g);
+const RICH_TEXT_TOKEN = /(\[[^\]]+\]\([^)]+\)|`[^`]+`)/g;
+
+export function renderWithCode(text: string): React.ReactNode {
+  if (!text.includes("`") && !/]\([^)]+\)/.test(text)) return text;
+
+  const parts = text.split(RICH_TEXT_TOKEN);
   return (
     <>
       {parts.map((part, i) => {
@@ -20,6 +23,28 @@ export function renderWithCode(text: string): React.ReactNode {
             </code>
           );
         }
+
+        const linkMatch = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
+        if (linkMatch) {
+          const [, label, href] = linkMatch;
+          const linkClassName =
+            "font-medium text-accent underline decoration-accent/40 underline-offset-2 transition-colors hover:decoration-accent";
+
+          if (href.startsWith("/")) {
+            return (
+              <Link key={i} href={href} className={linkClassName}>
+                {label}
+              </Link>
+            );
+          }
+
+          return (
+            <a key={i} href={href} className={linkClassName} target="_blank" rel="noopener noreferrer">
+              {label}
+            </a>
+          );
+        }
+
         return part;
       })}
     </>

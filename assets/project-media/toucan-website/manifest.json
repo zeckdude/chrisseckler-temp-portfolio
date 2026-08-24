@@ -1,0 +1,11 @@
+{
+  "project": "toucan-website",
+  "notes": "originals/ is Chris-only — agents must not touch it. public/projects/toucan-website/ is site-served.",
+  "gallery": [
+    { "file": "1-homepage-hero.png", "screen": "Marketing homepage hero" },
+    { "file": "2-onboarding-language.png", "screen": "Onboarding — language picker" },
+    { "file": "3-onboarding-tutorial.png", "screen": "Onboarding tutorial — track progress" },
+    { "file": "4-extension-permission.png", "screen": "Extension permission step" },
+    { "file": "5-account-settings.png", "screen": "Account settings" }
+  ]
+}

@@ -15,11 +15,26 @@ export interface MyRole {
   scope: string;
 }
 
+export interface WhatIBuiltDetailBlock {
+  heading: string;
+  body: string;
+  images?: string[];
+  imageCaptions?: Array<{ headline?: string; caption?: string } | null>;
+}
+
 export interface WhatIBuiltItem {
   title: string;
   problem: string;
   fix: string;
   result: string;
+  /** Single screenshot shorthand. Use `images` for multiple. */
+  image?: string;
+  /** Multiple screenshots for this feature. Takes precedence over `image` when set. */
+  images?: string[];
+  /** Optional captions indexed parallel to `images` (or the lone `image`). */
+  imageCaptions?: Array<{ headline?: string; caption?: string } | null>;
+  /** Grouped detail sections with their own copy and screenshots. */
+  detailBlocks?: WhatIBuiltDetailBlock[];
 }
 
 export interface Project {
@@ -47,6 +62,10 @@ export interface Project {
   imageCaptions?: Array<{ headline?: string; caption?: string } | null>;
   /** Optional demo video (MP4 path under /public). Shown as the first slide in the gallery. */
   videoSrc?: string;
+  /** Optional demo videos in display order. Takes precedence over `videoSrc` when set. */
+  videoSrcs?: string[];
+  /** Optional poster images keyed by video path (under /public). */
+  videoPosters?: Record<string, string>;
 }
 
 export const projects: Project[] = [
@@ -188,7 +207,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "adim-placeholder",
+    slug: "adim-platform",
     title: "Design System & Platform Engineering",
     company: "Adim",
     badge: "professional",
@@ -247,6 +266,16 @@ export const projects: Project[] = [
     ],
     outcome:
       "Consistency and shipping speed improved for the FE team — fewer one-offs, clearer reviews, better alignment — but I don't claim a hard velocity number. In ~10 months I left foundation work: design system, Storybook, Tailwind discipline, and FE process that would outlast individual features.",
+    videoSrcs: [
+      "/projects/adim-platform/product-explainer.mp4",
+      "/projects/adim-platform/product-demo-1.mp4",
+      "/projects/adim-platform/product-demo-2.mp4",
+      "/projects/adim-platform/product-demo-3.mp4",
+    ],
+    videoPosters: {
+      "/projects/adim-platform/product-explainer.mp4":
+        "/projects/adim-platform/video-poster.png",
+    },
     links: { company: "https://adim.io" },
   },
   {
@@ -255,12 +284,12 @@ export const projects: Project[] = [
     company: "Toucan",
     badge: "professional",
     category: "professional",
-    dates: "Dec 2019 – Mar 2023 (extension: year 1)",
+    dates: "Dec 2019 – Mar 2023",
     tagline:
       "Took over Toucan's browser extension from a scrappy CTO prototype and shipped the learning UI the product scaled on.",
     techStack: ["Browser Extension APIs", "JavaScript", "TypeScript", "React", "Material UI", "Jest"],
     overview:
-      "Toucan replaces select words on pages you're reading with vocabulary in a language you're learning — on desktop browsers, not Chrome-only. I joined at company inception alongside two other engineers who started the same day. The CTO and a contractor had built a basic extension that swapped words clumsily and changed few of them. I took over extension development in year one — reworking logic and shipping sidebar, contextless learning moments, and in-extension games — before moving to the web platform full time. (Mobile Safari was a separate solo port — see the Safari extension case study.)",
+      "Toucan replaces select words on pages you're reading with vocabulary in a language you're learning — on desktop browsers, not Chrome-only. I joined at company inception alongside two other engineers who started the same day. The CTO and a contractor had built a basic extension that swapped words clumsily and changed few of them. I took over extension development in year one — reworking logic and shipping sidebar, contextless learning moments, and in-extension games — before moving to the web platform full time. Porting Toucan to mobile Safari was separate work I owned solo; that story lives in the [Mobile Safari extension case study](/projects/toucan-safari-extension).",
     myRole: {
       title: "Senior Software Engineer I → II (early engineer)",
       context:
@@ -271,16 +300,241 @@ export const projects: Project[] = [
       "The prototype extension swapped words clumsily and covered too little of each page to feel useful — the core product loop wasn't shippable yet.",
     whatIBuilt: [
       {
-        title: "Extension takeover from prototype",
-        problem: "The CTO's build swapped few words and felt clunky on real pages.",
-        fix: "Took over extension development — reworked word-swap logic and product features on top of the existing prototype.",
-        result: "A learning experience the company could scale beyond a demo.",
+        title: "Extension sidebar shell",
+        problem:
+          "The browser action popup — the default toolbar panel — was too small for settings, navigation, and learning features. MV2 had no native side panel API, so the product needed a larger persistent surface while users browsed.",
+        fix:
+          "Built a custom page-overlay sidebar from scratch via content scripts — React and Material UI for the chrome: global on/off, close, bottom navigation, and a module slot pattern so features could plug in over time.",
+        result:
+          "A reusable home for the extension: the team could ship new modules without reworking the shell, and learners could find and control Toucan on any site.",
+        image: "/projects/toucan-browser-extension/sidebar-settings-shell.png",
       },
       {
-        title: "Core extension features",
-        problem: "The product needed learning moments that worked on arbitrary sites users already browsed.",
-        fix: "Sidebar, contextless learning moments, and in-extension games on desktop browsers.",
-        result: "Shipped the extension UI the product grew on during my first year.",
+        title: "Pause with duration options",
+        problem:
+          "Turning Toucan off was all-or-nothing — disable entirely or uninstall. Users who wanted a break often turned it off and forgot to turn it back on, so they lost learning momentum or churned.",
+        fix:
+          "Built a pause toggle with duration presets — 1 hour, until 6 p.m., until tomorrow, daily 9 a.m.–6 p.m., indefinitely — plus paused-state UI, clear copy, and a warning when paused indefinitely.",
+        result:
+          "A friendlier off-ramp without uninstalling; timed presets auto-resume learning so users don't have to remember to re-enable.",
+        images: [
+          "/projects/toucan-browser-extension/pause-duration-options.png",
+          "/projects/toucan-browser-extension/pause-duration-indefinitely.png",
+        ],
+        imageCaptions: [
+          {
+            headline: "Pause duration options",
+            caption: "Preset timers so users can step away without uninstalling.",
+          },
+          {
+            headline: "Indefinitely selected",
+            caption: "Clear warning when Toucan stays off with no return timer.",
+          },
+        ],
+      },
+      {
+        title: "Saved words and practice quizzes",
+        problem:
+          "Inline word swaps were passive — users couldn't collect vocabulary or actively review what they'd encountered while browsing.",
+        fix:
+          "Built the full flow: save from the inline translation dialog, a Saved sidebar panel with sort, mastery status, and completion tracking, plus randomized practice quizzes (five module types) with stage-specific UI (empty state, in-progress, daily goals). During practice, swapped words on the page are obfuscated so users recall from memory.",
+        result:
+          "Turned passive browsing into active recall — users owned a personal vocabulary list and could practice it without leaving the page.",
+        images: [
+          "/projects/toucan-browser-extension/saved-words-save-dialog.png",
+          "/projects/toucan-browser-extension/saved-words-empty-state.png",
+          "/projects/toucan-browser-extension/saved-words-list.png",
+          "/projects/toucan-browser-extension/saved-words-practice-cta.png",
+          "/projects/toucan-browser-extension/saved-words-quiz-multiple-choice.png",
+          "/projects/toucan-browser-extension/saved-words-quiz-matching.png",
+        ],
+        imageCaptions: [
+          {
+            headline: "Save from inline dialog",
+            caption: "Bookmark a swapped word from the hover card.",
+          },
+          {
+            headline: "Empty state",
+            caption: "Onboarding when the nest is empty; 10 words unlock practice.",
+          },
+          {
+            headline: "Saved words list",
+            caption: "Sort, mastery bars, and daily practice progress.",
+          },
+          {
+            headline: "Practice prompt",
+            caption: "Daily goal CTA while browsing a live page.",
+          },
+          {
+            headline: "Multiple-choice quiz",
+            caption: "One of five randomized quiz module types.",
+          },
+          {
+            headline: "Matching quiz",
+            caption: "Match words to translations in-sidebar.",
+          },
+        ],
+      },
+      {
+        title: "Toucan Tips",
+        problem:
+          "Users didn't know what Toucan could do — features were buried in the sidebar with no guided discovery.",
+        fix:
+          "Built a Tips hub in the sidebar: an Explore Toucan checklist for core actions, a standalone refresher that replays the onboarding-style simulated browser, and Extra Practice — an injectable on-page quiz on known sites with user-controlled launch and dismiss.",
+        result:
+          "Self-serve help at their fingertips — discover features, relearn how Toucan works, and get extra practice without support.",
+        detailBlocks: [
+          {
+            heading: "Toucan Tips hub",
+            body:
+              "A discovery panel listing Tips, shortcuts to the Explore checklist, refresher tutorial, and Extra Practice — plus contextual cards like keyboard pause hints.",
+            images: [
+              "/projects/toucan-browser-extension/toucan-tips-hub.png",
+              "/projects/toucan-browser-extension/toucan-tips-explore-checklist.png",
+            ],
+            imageCaptions: [
+              {
+                headline: "Toucan Tips hub",
+                caption: "Central place to discover features and open tutorials.",
+              },
+              {
+                headline: "Explore Toucan checklist",
+                caption: "Guided actions with progress tracking until users feel confident.",
+              },
+            ],
+          },
+          {
+            heading: "Refresher tutorial",
+            body:
+              "Launches the simulated browser experience from onboarding on a standalone page — users can relearn hover translations, progress tracking, and pause at any time.",
+            images: [
+              "/projects/toucan-browser-extension/toucan-tips-refresher-welcome.png",
+              "/projects/toucan-browser-extension/toucan-tips-refresher-hover.png",
+              "/projects/toucan-browser-extension/toucan-tips-refresher-progress.png",
+              "/projects/toucan-browser-extension/toucan-tips-refresher-pause.png",
+            ],
+            imageCaptions: [
+              {
+                headline: "Ready for more?",
+                caption: "Entry point to replay the onboarding-style walkthrough.",
+              },
+              {
+                headline: "Hover to learn",
+                caption: "Step 1 — hover a swapped word for the translation.",
+              },
+              {
+                headline: "Track your progress",
+                caption: "Step 2 — see how mastery unlocks more context.",
+              },
+              {
+                headline: "Press pause",
+                caption: "Step 3 — pause Toucan for a set duration from the popup.",
+              },
+            ],
+          },
+          {
+            heading: "Extra Practice",
+            body:
+              "Injects a practice module into a known area of a known site — users can launch when ready, dismiss permanently, and quiz on words they've already seen while browsing.",
+            images: [
+              "/projects/toucan-browser-extension/toucan-tips-extra-practice-cta.png",
+              "/projects/toucan-browser-extension/toucan-tips-extra-practice-quiz.png",
+              "/projects/toucan-browser-extension/toucan-tips-extra-practice-success.png",
+            ],
+            imageCaptions: [
+              {
+                headline: "Extra Practice CTA",
+                caption: "Injectable prompt on Wikipedia — user chooses when to begin.",
+              },
+              {
+                headline: "In-page quiz",
+                caption: "Practice saved vocabulary without leaving the article.",
+              },
+              {
+                headline: "Session complete",
+                caption: "Success feedback with option to keep practicing.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Extension settings modules",
+        problem:
+          "Extension settings were scattered or unreachable — users couldn't control language, blocking, audio, shortcuts, or account without friction.",
+        fix:
+          "Built five settings modules inside the sidebar — language switcher, blocked sites, audio controls, keyboard hotkeys, and delete account — each wired to backend behavior so users stayed in the extension.",
+        result:
+          "Users could self-serve — switch languages, block sites, tune audio, use hotkeys, and leave cleanly without leaving the extension.",
+        detailBlocks: [
+          {
+            heading: "Language switcher",
+            body:
+              "Switch source and target language from Settings; triggers a new translation set download when needed — no leaving the extension.",
+            images: [
+              "/projects/toucan-browser-extension/settings-language-light.png",
+              "/projects/toucan-browser-extension/settings-language-dark.png",
+            ],
+            imageCaptions: [
+              {
+                headline: "Settings — light mode",
+                caption: "Language picker and module entry points in the sidebar settings panel.",
+              },
+              {
+                headline: "Settings — dark mode",
+                caption: "Same panel in dark theme.",
+              },
+            ],
+          },
+          {
+            heading: "Blocked sites",
+            body:
+              "URL input and block list UI that sends blocked domains to the backend — blocking logic already existed; this let users manage sites from Settings or the word popup.",
+            images: ["/projects/toucan-browser-extension/settings-blocked-sites.png"],
+            imageCaptions: [
+              {
+                headline: "Blocked sites",
+                caption: "Add or remove domains where Toucan should not run.",
+              },
+            ],
+          },
+          {
+            heading: "Audio controls",
+            body:
+              "Pronunciation speed with live preview and a voice picker for persona narration — researched natural-voice libraries to find quality options.",
+            images: ["/projects/toucan-browser-extension/settings-audio-controls.png"],
+            imageCaptions: [
+              {
+                headline: "Audio controls",
+                caption: "Adjust speed and choose a voice with inline preview.",
+              },
+            ],
+          },
+          {
+            heading: "Keyboard hotkeys",
+            body:
+              "Shortcuts for activate extension, open the settings sidebar, and pause/unpause Toucan — configurable from the browser's extension shortcuts UI.",
+            images: ["/projects/toucan-browser-extension/settings-keyboard-hotkeys.png"],
+            imageCaptions: [
+              {
+                headline: "Keyboard hotkeys",
+                caption: "Extension shortcuts for activate, open sidebar, and pause.",
+              },
+            ],
+          },
+          {
+            heading: "Delete account",
+            body:
+              "Warning step before deletion — progress and settings would be lost — then confirm. Respectful offboarding so frustrated users could leave without bad reviews.",
+            images: ["/projects/toucan-browser-extension/settings-delete-account.png"],
+            imageCaptions: [
+              {
+                headline: "Delete account",
+                caption: "Heads-up before permanent account deletion.",
+              },
+            ],
+          },
+        ],
       },
       {
         title: "RFCs",
@@ -291,8 +545,49 @@ export const projects: Project[] = [
     ],
     outcome:
       "Toucan reached 1M+ users during my tenure — a company outcome I do not claim sole credit for. I owned browser extension engineering in year one, turning a scrappy prototype into the learning UI the product scaled on.",
-    links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+    links: {
+      live: "https://chromewebstore.google.com/detail/toucan-by-babbel-language/lokjgaehpcnlmkebpmjiofccpklbmoci",
+      company: "https://jointoucan.com",
+    },
     featured: true,
+    images: [
+      "/projects/toucan-browser-extension/1-brand-hero.png",
+      "/projects/toucan-browser-extension/2-how-it-works.png",
+      "/projects/toucan-browser-extension/3-wikipedia-inline-learning.png",
+      "/projects/toucan-browser-extension/4-sidebar-settings.png",
+      "/projects/toucan-browser-extension/5-language-picker.png",
+      "/projects/toucan-browser-extension/6-highlight-to-translate.png",
+      "/projects/toucan-browser-extension/7-contextless-quiz-success.png",
+      "/projects/toucan-browser-extension/8-contextless-quiz-minions.png",
+      "/projects/toucan-browser-extension/9-practice-activities.png",
+      "/projects/toucan-browser-extension/10-extra-practice-modal.png",
+      "/projects/toucan-browser-extension/11-shortcuts-dining-out.png",
+      "/projects/toucan-browser-extension/12-toucan-tips.png",
+      "/projects/toucan-browser-extension/13-onboarding-checklist.png",
+      "/projects/toucan-browser-extension/14-saved-words-empty.png",
+      "/projects/toucan-browser-extension/15-saved-words.png",
+      "/projects/toucan-browser-extension/16-practice-progress.png",
+      "/projects/toucan-browser-extension/17-chrome-web-store.png",
+    ],
+    imageCaptions: [
+      { headline: "Toucan browser extension", caption: "Language learning while you browse — Editor's Picks on Chrome and Edge." },
+      { headline: "How Toucan works", caption: "Words swap inline on pages you already read; hover for translation and practice." },
+      { headline: "Inline learning on Wikipedia", caption: "Real-page word swaps, hover card, and the extension sidebar — the core product loop." },
+      { headline: "Extension settings", caption: "Per-site permissions, learning level, highlight-to-translate, extra practice, and dark mode." },
+      { headline: "Language picker", caption: "Switch learning languages from the sidebar with instant confirmation." },
+      { headline: "Highlight to translate", caption: "Select any word on a page and translate it on demand." },
+      { headline: "Contextless quiz", caption: "Learning moments that appear on arbitrary sites — with success feedback when you get it right." },
+      { headline: "Contextless quiz on any site", caption: "The same learning moments work on entertainment pages — vocabulary practice wherever you browse." },
+      { headline: "Practice activities", caption: "In-extension games that reinforce vocabulary throughout the day." },
+      { headline: "Extra practice", caption: "Quick practice sessions on sites like YouTube and Reddit when you have a spare moment." },
+      { headline: "Spanish Shortcuts", caption: "Curriculum paths for phrases you'll actually use — like dining out." },
+      { headline: "Toucan Tips", caption: "In-context guidance to help users discover features as they browse." },
+      { headline: "Onboarding checklist", caption: "Guided setup that walks new users through permissions, settings, and first practice." },
+      { headline: "Saved words", caption: "Empty state before users start building their personal vocabulary list." },
+      { headline: "Saved words in action", caption: "Bookmark vocabulary from the wild and see it highlighted when you browse again." },
+      { headline: "Practice progress", caption: "Daily practice sessions and mastery tracking on saved words." },
+      { headline: "Chrome Web Store", caption: "Editor's Picks listing — 300K+ users and strong reviews at scale." },
+    ],
   },
   {
     slug: "toucan-safari-extension",
@@ -386,6 +681,20 @@ export const projects: Project[] = [
     outcome:
       "The company reached 13M lifetime page views and 1M+ users — metrics I attribute to the product, not solely to my work. I architected the Next.js platform from scratch and raised marketing-site Core Web Vitals from 35 → 98 by fixing LCP, JavaScript weight, and late-loading fonts and layout.",
     links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+    images: [
+      "/projects/toucan-website/1-homepage-hero.png",
+      "/projects/toucan-website/2-onboarding-language.png",
+      "/projects/toucan-website/3-onboarding-tutorial.png",
+      "/projects/toucan-website/4-extension-permission.png",
+      "/projects/toucan-website/5-account-settings.png",
+    ],
+    imageCaptions: [
+      { headline: "Marketing homepage", caption: "SEO-driven landing page with language picker, social proof, and in-context product demo." },
+      { headline: "Onboarding — language picker", caption: "Signup flow where users choose source and target languages." },
+      { headline: "Onboarding tutorial", caption: "In-product walkthrough teaching hover-to-learn and progress tracking." },
+      { headline: "Extension permission", caption: "Browser permission step with security messaging before install." },
+      { headline: "Account settings", caption: "Authenticated account management — profile, email, and password." },
+    ],
   },
   {
     slug: "dave-support-tooling",
@@ -1185,6 +1494,19 @@ export const projects: Project[] = [
 
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
+}
+
+/** First gallery video — used for grid thumbnails when there is no screenshot. */
+export function getProjectPreviewVideo(project: Project): string | undefined {
+  if (project.videoSrcs?.length) return project.videoSrcs[0];
+  return project.videoSrc;
+}
+
+export function getVideoPoster(
+  project: Project,
+  videoSrc: string,
+): string | undefined {
+  return project.videoPosters?.[videoSrc];
 }
 
 export function getFeaturedProjects(): Project[] {

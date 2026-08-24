@@ -12,10 +12,11 @@ import {
   ProjectSectionNavRoot,
   ProjectSectionNavSidebar,
 } from "@/components/project-detail/project-section-nav";
-import { getProjectBySlug, projects } from "@/lib/projects";
+import { getProjectBySlug, getProjectPreviewVideo, projects } from "@/lib/projects";
 import { getProjectSections } from "@/lib/project-sections";
 import { renderWithCode } from "@/lib/render-with-code";
 import ProjectViewTracker from "@/components/analytics/project-view-tracker";
+import WhatIBuiltList from "@/components/project-detail/what-i-built-list";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -54,15 +55,6 @@ function Section({
       <h2 className="font-display text-2xl font-extrabold text-text-primary">{title}</h2>
       <div className="mt-4 text-base leading-relaxed text-text-primary/90">{children}</div>
     </Reveal>
-  );
-}
-
-function BuiltField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid grid-cols-[5.75rem_minmax(0,1fr)] gap-x-4">
-      <dt className="pt-0.5 font-mono text-xs text-text-secondary">{label}</dt>
-      <dd className="text-text-primary">{renderWithCode(value)}</dd>
-    </div>
   );
 }
 
@@ -111,15 +103,23 @@ export default async function ProjectDetailPage({
             </Reveal>
 
             <Reveal className="mt-10">
-              {project.images && project.images.length > 0 ? (
+              {(project.images?.length ?? 0) > 0 ||
+              project.videoSrc ||
+              (project.videoSrcs?.length ?? 0) > 0 ? (
                 <ProjectGallery
                   images={project.images}
                   videoSrc={project.videoSrc}
+                  videoSrcs={project.videoSrcs}
+                  videoPosters={project.videoPosters}
                   imageCaptions={project.imageCaptions}
                   title={project.title}
                 />
               ) : (
-                <ProjectThumbnail title={project.title} className="aspect-16/9" />
+                <ProjectThumbnail
+                  title={project.title}
+                  videoSrc={getProjectPreviewVideo(project)}
+                  className="aspect-16/9"
+                />
               )}
             </Reveal>
 
@@ -163,20 +163,17 @@ export default async function ProjectDetailPage({
 
               {project.whatIBuilt && project.whatIBuilt.length > 0 && (
                 <Section id="what-i-built" title="What I Built">
-                  <ul className="divide-y divide-border">
-                    {project.whatIBuilt.map((item) => (
-                      <li key={item.title} className="py-6 first:pt-0 last:pb-0">
-                        <h3 className="text-base font-semibold tracking-tight text-text-primary">
-                          {renderWithCode(item.title)}
-                        </h3>
-                        <dl className="mt-3 flex flex-col gap-2">
-                          <BuiltField label="Problem" value={item.problem} />
-                          <BuiltField label="Fix" value={item.fix} />
-                          <BuiltField label="Result" value={item.result} />
-                        </dl>
-                      </li>
-                    ))}
-                  </ul>
+                  <WhatIBuiltList
+                    items={project.whatIBuilt}
+                    projectTitle={project.title}
+                    gallery={{
+                      images: project.images,
+                      videoSrc: project.videoSrc,
+                      videoSrcs: project.videoSrcs,
+                      videoPosters: project.videoPosters,
+                      imageCaptions: project.imageCaptions,
+                    }}
+                  />
                 </Section>
               )}
 

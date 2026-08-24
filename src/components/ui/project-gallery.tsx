@@ -5,45 +5,49 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ProjectLightbox, { type LightboxSlide, type SlideCaption } from "./project-lightbox";
+import VideoPoster from "./video-poster";
 import { track } from "@/lib/analytics";
+import { PROJECT_IMAGE_QUALITY, PROJECT_IMAGE_SIZES } from "@/lib/project-media-sizes";
+import { preloadLightboxSlides } from "@/lib/preload-lightbox-slides";
+import {
+  buildProjectGalleryCaptions,
+  buildProjectGallerySlides,
+} from "@/lib/project-gallery-slides";
 
-function buildSlides(videoSrc?: string, images?: string[]): LightboxSlide[] {
-  const slides: LightboxSlide[] = [];
-  if (videoSrc) slides.push({ type: "video", src: videoSrc });
-  for (const src of images ?? []) slides.push({ type: "image", src });
-  return slides;
-}
-
-/** Map imageCaptions (indexed by images[]) into the unified slides array. */
-function buildCaptions(
-  videoSrc: string | undefined,
-  imageCaptions: SlideCaption[] | undefined,
-): SlideCaption[] | undefined {
-  if (!imageCaptions) return undefined;
-  const offset = videoSrc ? 1 : 0;
-  const result: SlideCaption[] = Array(offset).fill(null);
-  for (const c of imageCaptions) result.push(c ?? null);
-  return result;
+function resolveVideos(videoSrc?: string, videoSrcs?: string[]): string[] {
+  if (videoSrcs?.length) return videoSrcs;
+  if (videoSrc) return [videoSrc];
+  return [];
 }
 
 export default function ProjectGallery({
   images,
   videoSrc,
+  videoSrcs,
+  videoPosters,
   imageCaptions,
   title,
 }: {
   images?: string[];
   videoSrc?: string;
+  videoSrcs?: string[];
+  videoPosters?: Record<string, string>;
   imageCaptions?: SlideCaption[];
   title: string;
 }) {
-  const slides = buildSlides(videoSrc, images);
-  const captions = buildCaptions(videoSrc, imageCaptions);
+  const videoCount = resolveVideos(videoSrc, videoSrcs).length;
+  const slides = buildProjectGallerySlides({ videoSrc, videoSrcs, videoPosters, images });
+  const captions = buildProjectGalleryCaptions(videoCount, imageCaptions);
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxStartIndex, setLightboxStartIndex] = useState(0);
   const multiple = slides.length > 1;
+
+  useEffect(() => {
+    preloadLightboxSlides(slides, 0);
+  }, [slides]);
 
   const updateActiveIndex = useCallback(() => {
     const track = trackRef.current;
@@ -56,14 +60,15 @@ export default function ProjectGallery({
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || !multiple) return;
+    if (!track || !multiple || lightboxOpen) return;
     track.addEventListener("scroll", updateActiveIndex, { passive: true });
     return () => track.removeEventListener("scroll", updateActiveIndex);
-  }, [multiple, updateActiveIndex]);
+  }, [multiple, updateActiveIndex, lightboxOpen]);
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || !multiple) return;
+    const hasImages = (images?.length ?? 0) > 0;
+    if (!track || !multiple || !hasImages) return;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
     const timeout = window.setTimeout(() => {
@@ -75,16 +80,25 @@ export default function ProjectGallery({
       }, 550);
     }, 900);
     return () => window.clearTimeout(timeout);
-  }, [multiple, hasInteracted]);
+  }, [multiple, hasInteracted, images?.length]);
 
-  const goTo = useCallback((index: number) => {
+  const goTo = useCallback((index: number, instant = false) => {
     const el = trackRef.current;
     if (!el) return;
+    const clamped = Math.min(slides.length - 1, Math.max(0, index));
     setHasInteracted(true);
-    setActiveIndex(index);
-    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
-    track("gallery slide changed", { title, index });
-  }, [title]);
+    setActiveIndex(clamped);
+    if (instant) {
+      el.scrollLeft = clamped * el.clientWidth;
+    } else {
+      el.scrollTo({ left: clamped * el.clientWidth, behavior: "smooth" });
+    }
+    track("gallery slide changed", { title, index: clamped });
+  }, [slides.length, title]);
+
+  const syncFromLightbox = useCallback((index: number) => {
+    goTo(index, true);
+  }, [goTo]);
 
   const handleWheel = useCallback(
     (event: React.WheelEvent<HTMLDivElement>) => {
@@ -116,34 +130,47 @@ export default function ProjectGallery({
           className="flex aspect-video snap-x snap-mandatory overflow-x-auto overflow-y-hidden rounded border border-border bg-surface [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {slides.map((slide, index) => (
-            <div
+            <button
               key={slide.src}
-              className="relative w-full shrink-0 snap-start snap-always cursor-zoom-in"
+              type="button"
+              className={cn(
+                "relative w-full shrink-0 snap-start snap-always border-0 bg-transparent p-0 text-left",
+                slide.type === "video" ? "cursor-pointer" : "cursor-zoom-in",
+              )}
+              aria-label={
+                slide.type === "video"
+                  ? `Play ${title} demo video ${index + 1} of ${videoCount} in full screen`
+                  : `View ${title} screenshot ${index - videoCount + 1} of ${slides.length - videoCount}`
+              }
               onClick={() => {
                 setHasInteracted(true);
+                setLightboxStartIndex(index);
                 setLightboxOpen(true);
                 track("lightbox opened", { title, index });
               }}
             >
               {slide.type === "video" ? (
-                <video
+                <VideoPoster
                   src={slide.src}
-                  controls
-                  playsInline
-                  className="h-full w-full bg-black object-contain"
-                  aria-label={`${title} demo video`}
+                  poster={slide.poster}
+                  objectFit={slide.poster ? "cover" : "contain"}
+                  playIconSize="md"
+                  className="aspect-video w-full"
                 />
               ) : (
-                <Image
-                  src={slide.src}
-                  alt={`${title} screenshot ${index + (videoSrc ? 0 : 1)} of ${slides.length}`}
-                  fill
-                  priority={index === 0}
-                  sizes="(min-width: 1024px) 760px, 100vw"
-                  className="object-cover object-top"
-                />
+                <div className="relative aspect-video w-full">
+                  <Image
+                    src={slide.src}
+                    alt=""
+                    fill
+                    priority={index === 0}
+                    quality={PROJECT_IMAGE_QUALITY.gallery}
+                    sizes={PROJECT_IMAGE_SIZES.gallery}
+                    className="object-cover object-top"
+                  />
+                </div>
               )}
-            </div>
+            </button>
           ))}
         </div>
 
@@ -205,12 +232,10 @@ export default function ProjectGallery({
       {lightboxOpen && (
         <ProjectLightbox
           slides={slides}
-          activeIndex={activeIndex}
+          initialIndex={lightboxStartIndex}
           captions={captions}
           onClose={() => setLightboxOpen(false)}
-          onNavigate={(i) => {
-            goTo(i);
-          }}
+          onNavigate={syncFromLightbox}
         />
       )}
     </>

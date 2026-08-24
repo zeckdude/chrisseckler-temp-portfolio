@@ -5,16 +5,23 @@ import Badge, { CompanyChip } from "./badge";
 import { TechChipList } from "./tech-chip";
 import ProjectThumbnail from "./project-thumbnail";
 import type { Project } from "@/lib/projects";
+import { getProjectPreviewVideo, getVideoPoster } from "@/lib/projects";
 import { track } from "@/lib/analytics";
 
 export default function ProjectCard({ project }: { project: Project }) {
   const detailHref = `/projects/${project.slug}`;
+  const previewVideo = getProjectPreviewVideo(project);
 
   return (
     <div className="group flex h-full flex-col rounded-md border border-border bg-surface p-4 transition-all duration-200 ease-out hover:-translate-y-1 hover:border-accent/40">
       <Link href={detailHref} className="flex flex-1 flex-col">
         <div className="overflow-hidden rounded">
-          <ProjectThumbnail title={project.title} image={project.images?.[0]} />
+          <ProjectThumbnail
+            title={project.title}
+            image={project.images?.[0]}
+            videoSrc={previewVideo}
+            videoPoster={previewVideo ? getVideoPoster(project, previewVideo) : undefined}
+          />
         </div>
         <div className="mt-4 flex flex-1 flex-col gap-3">
           <div className="flex flex-wrap items-center gap-1.5">

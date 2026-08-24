@@ -174,7 +174,7 @@ Edit `src/lib/projects.ts`. Each project is a typed `Project` object in the `pro
 | `techStack` | `string[]` | Shown as chips on the detail page |
 | `overview` | `string` | Lead paragraph on the detail page |
 | `problem` | `string?` | Optional "The Problem" section |
-| `whatIBuilt` | `WhatIBuiltItem[]?` | Each item is `{ title, problem, fix, result }`. Wrap code names in backticks: `` `ComponentName` `` → renders as `<code>` |
+| `whatIBuilt` | `WhatIBuiltItem[]?` | Each item is `{ title, problem, fix, result, image?, images?, imageCaptions?, detailBlocks? }`. Wrap code names in backticks: `` `ComponentName` `` → renders as `<code>`. Optional images add lightbox triggers; `detailBlocks` groups copy + screenshots by sub-feature. |
 | `outcome` | `string?` | Optional "Outcome / Impact" section |
 | `links.live` | `string?` | URL for the "Live Site" button |
 | `links.liveNote` | `string?` | Shown instead of a live button when the site is behind auth or gone |
