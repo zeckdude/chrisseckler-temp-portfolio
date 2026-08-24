@@ -26,6 +26,7 @@ export default function ProjectGallery({
   videoSrcs,
   videoPosters,
   imageCaptions,
+  galleryLabel,
   title,
 }: {
   images?: string[];
@@ -33,6 +34,7 @@ export default function ProjectGallery({
   videoSrcs?: string[];
   videoPosters?: Record<string, string>;
   imageCaptions?: SlideCaption[];
+  galleryLabel?: string;
   title: string;
 }) {
   const videoCount = resolveVideos(videoSrc, videoSrcs).length;
@@ -117,6 +119,11 @@ export default function ProjectGallery({
 
   return (
     <>
+      {galleryLabel && (
+        <p className="mb-3 font-mono text-xs uppercase tracking-wide text-text-secondary">
+          {galleryLabel}
+        </p>
+      )}
       <div className="group/gallery relative">
         <div
           ref={trackRef}

@@ -8,6 +8,10 @@ export interface ProjectSection {
 export function getProjectSections(project: Project): ProjectSection[] {
   const sections: ProjectSection[] = [{ id: "overview", label: "Overview" }];
 
+  if (project.productOverview) {
+    sections.push({ id: "product-overview", label: "Product Overview" });
+  }
+
   if (project.myRole) {
     sections.push({ id: "my-role", label: "My Role" });
   }

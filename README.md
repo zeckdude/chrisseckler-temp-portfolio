@@ -184,6 +184,10 @@ Edit `src/lib/projects.ts`. Each project is a typed `Project` object in the `pro
 | `images` | `string[]?` | Paths under `/public`, e.g. `"/projects/my-project/1-home.png"`. First image is the card thumbnail. |
 | `imageCaptions` | `Array<{ headline?, caption? } \| null>?` | Indexed parallel to `images`. Use `null` for a slide with no caption. |
 | `videoSrc` | `string?` | Path to an `.mp4` under `/public`. Shown as the first slide in the gallery. |
+| `videoSrcs` | `string[]?` | Multiple demo videos in gallery order. Takes precedence over `videoSrc`. |
+| `videoPosters` | `Record<string, string>?` | Poster image paths keyed by video path. |
+| `productOverview` | `ProductOverview?` | Optional `{ videoSrc, poster?, title?, caption? }` — company/product context video in its own section (not mixed into the work-evidence gallery). |
+| `galleryLabel` | `string?` | Optional label above the hero gallery (e.g. `"Platform demos"`). |
 
 **Adding a new project checklist:**
 1. Create a folder at `public/projects/{slug}/` and drop images/videos there.

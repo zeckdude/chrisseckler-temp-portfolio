@@ -17,6 +17,7 @@ import { getProjectSections } from "@/lib/project-sections";
 import { renderWithCode } from "@/lib/render-with-code";
 import ProjectViewTracker from "@/components/analytics/project-view-tracker";
 import WhatIBuiltList from "@/components/project-detail/what-i-built-list";
+import ProjectProductOverview from "@/components/project-detail/project-product-overview";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -112,6 +113,7 @@ export default async function ProjectDetailPage({
                   videoSrcs={project.videoSrcs}
                   videoPosters={project.videoPosters}
                   imageCaptions={project.imageCaptions}
+                  galleryLabel={project.galleryLabel}
                   title={project.title}
                 />
               ) : (
@@ -129,6 +131,18 @@ export default async function ProjectDetailPage({
               <Section id="overview" title="Overview">
                 <p>{renderWithCode(project.overview)}</p>
               </Section>
+
+              {project.productOverview && (
+                <Section
+                  id="product-overview"
+                  title={project.productOverview.title ?? "Product overview"}
+                >
+                  <ProjectProductOverview
+                    overview={project.productOverview}
+                    projectTitle={project.title}
+                  />
+                </Section>
+              )}
 
               {project.myRole && (
                 <Section id="my-role" title="My Role">

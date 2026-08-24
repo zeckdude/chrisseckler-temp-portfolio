@@ -101,7 +101,8 @@ export const ANALYTICS_EVENTS = [
   },
   {
     name: "lightbox opened",
-    where: "src/components/ui/project-gallery.tsx, src/components/project-detail/what-i-built-list.tsx",
+    where:
+      "src/components/ui/project-gallery.tsx, src/components/project-detail/what-i-built-list.tsx, src/components/project-detail/project-product-overview.tsx",
     when: "Visitor opens the full-screen media lightbox",
   },
   {

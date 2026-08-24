@@ -22,6 +22,15 @@ export interface WhatIBuiltDetailBlock {
   imageCaptions?: Array<{ headline?: string; caption?: string } | null>;
 }
 
+export interface ProductOverview {
+  videoSrc: string;
+  poster?: string;
+  /** Section heading — defaults to "Product overview". */
+  title?: string;
+  /** Shown above the video — clarify ownership when this is company/promo content. */
+  caption?: string;
+}
+
 export interface WhatIBuiltItem {
   title: string;
   problem: string;
@@ -66,6 +75,10 @@ export interface Project {
   videoSrcs?: string[];
   /** Optional poster images keyed by video path (under /public). */
   videoPosters?: Record<string, string>;
+  /** Optional company/product context video — separate from the work-evidence gallery. */
+  productOverview?: ProductOverview;
+  /** Optional label shown above the hero gallery (e.g. "Platform demos"). */
+  galleryLabel?: string;
 }
 
 export const projects: Project[] = [
@@ -266,16 +279,18 @@ export const projects: Project[] = [
     ],
     outcome:
       "Consistency and shipping speed improved for the FE team — fewer one-offs, clearer reviews, better alignment — but I don't claim a hard velocity number. In ~10 months I left foundation work: design system, Storybook, Tailwind discipline, and FE process that would outlast individual features.",
+    productOverview: {
+      videoSrc: "/projects/adim-platform/product-explainer.mp4",
+      poster: "/projects/adim-platform/video-poster.png",
+      caption:
+        "Company product video — context for what Adim is, not a UI walkthrough of my work.",
+    },
+    galleryLabel: "Platform demos",
     videoSrcs: [
-      "/projects/adim-platform/product-explainer.mp4",
       "/projects/adim-platform/product-demo-1.mp4",
       "/projects/adim-platform/product-demo-2.mp4",
       "/projects/adim-platform/product-demo-3.mp4",
     ],
-    videoPosters: {
-      "/projects/adim-platform/product-explainer.mp4":
-        "/projects/adim-platform/video-poster.png",
-    },
     links: { company: "https://adim.io" },
   },
   {
@@ -550,6 +565,12 @@ export const projects: Project[] = [
       company: "https://jointoucan.com",
     },
     featured: true,
+    productOverview: {
+      videoSrc: "/projects/toucan-browser-extension/toucan-explainer.mp4",
+      poster: "/projects/toucan-browser-extension/1-brand-hero.png",
+      caption:
+        "Company product video — context for what Toucan is, not a UI walkthrough of my work.",
+    },
     images: [
       "/projects/toucan-browser-extension/1-brand-hero.png",
       "/projects/toucan-browser-extension/2-how-it-works.png",
@@ -625,6 +646,13 @@ export const projects: Project[] = [
     outcome:
       "I got Toucan's first mobile Safari extension live with no template to follow — solo, under-documented APIs, and iterative debugging. Do not claim to be the absolute first extension on the store; it was one of the early mobile extensions on the marketplace when that surface was new.",
     links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+    images: ["/projects/toucan-safari-extension/safari-hero.png"],
+    imageCaptions: [
+      {
+        headline: "Mobile Safari extension",
+        caption: "Toucan's iOS Safari Web Extension — solo port from the desktop browser extension.",
+      },
+    ],
   },
   {
     slug: "toucan-website",
@@ -681,6 +709,12 @@ export const projects: Project[] = [
     outcome:
       "The company reached 13M lifetime page views and 1M+ users — metrics I attribute to the product, not solely to my work. I architected the Next.js platform from scratch and raised marketing-site Core Web Vitals from 35 → 98 by fixing LCP, JavaScript weight, and late-loading fonts and layout.",
     links: { live: "https://jointoucan.com", company: "https://jointoucan.com" },
+    productOverview: {
+      videoSrc: "/projects/toucan-website/toucan-explainer.mp4",
+      poster: "/projects/toucan-website/1-homepage-hero.png",
+      caption:
+        "Company product video — context for what Toucan is, not a UI walkthrough of my work.",
+    },
     images: [
       "/projects/toucan-website/1-homepage-hero.png",
       "/projects/toucan-website/2-onboarding-language.png",
@@ -738,6 +772,13 @@ export const projects: Project[] = [
     outcome:
       "Dave reached unicorn status and 4M+ users during this period — company outcomes, not mine alone. I shipped support tooling that let agents see account data inside Zendesk, pause/unpause for retention, and ticket automation — and helped scale hiring through 50+ interviews.",
     links: { live: "https://dave.com", company: "https://dave.com" },
+    images: ["/projects/dave-support-tooling/help-center-home.png"],
+    imageCaptions: [
+      {
+        headline: "Help Center",
+        caption: "Member-facing help center landing page with search and category navigation.",
+      },
+    ],
   },
   {
     slug: "dave-mobile-app",
@@ -776,6 +817,13 @@ export const projects: Project[] = [
       "Dave scaled from 200K to 4M+ users during this period — a company result, not a personal metric. I contributed modular React Native UI and test coverage as the member app grew; promoted to Senior Front-End Engineer within seven months.",
     links: { live: "https://dave.com", company: "https://dave.com" },
     featured: true,
+    images: ["/projects/dave-mobile-app/app-store-listing.png"],
+    imageCaptions: [
+      {
+        headline: "App Store listing",
+        caption: "Dave member app on iOS — ExtraCash, checking, and in-app flows at scale.",
+      },
+    ],
   },
   {
     slug: "dave-public-website",
@@ -808,6 +856,13 @@ export const projects: Project[] = [
     outcome:
       "I owned the public marketing site implementation during hypergrowth. Dave reached unicorn status in that period — a company metric. The honest result for this project is a live marketing presence built solo on the front end with design and product partners.",
     links: { live: "https://dave.com", company: "https://dave.com" },
+    images: ["/projects/dave-public-website/homepage-hero.png"],
+    imageCaptions: [
+      {
+        headline: "Marketing homepage",
+        caption: "Dave.com hero — ExtraCash value prop, app download CTA, and primary navigation.",
+      },
+    ],
   },
   {
     slug: "chrome-river-expense-reporting",
@@ -852,6 +907,13 @@ export const projects: Project[] = [
     outcome:
       "Two-plus years of reliable sprint delivery on expense reporting surfaces — pixel-accurate Figma implementation and modular Backbone views. No single project metric claimed.",
     links: { company: "https://emburse.com" },
+    images: ["/projects/chrome-river-expense-reporting/expense-report-ipad.png"],
+    imageCaptions: [
+      {
+        headline: "Expense report submit flow",
+        caption: "iPad expense reporting — line items, receipts, category picker, and submit.",
+      },
+    ],
   },
   {
     slug: "fox-international-portal",
@@ -984,6 +1046,20 @@ export const projects: Project[] = [
     outcome:
       "Shipped for the 300: Rise of an Empire marketing campaign on a theatrical deadline — no traffic or engagement metric claimed.",
     links: { company: "https://trailerparkgroup.com" },
+    images: [
+      "/projects/warner-bros-300/1.jpg",
+      "/projects/warner-bros-300/2.jpg",
+      "/projects/warner-bros-300/3.jpg",
+      "/projects/warner-bros-300/4.jpg",
+      "/projects/warner-bros-300/5.jpg",
+    ],
+    imageCaptions: [
+      { headline: "Movie poster hero", caption: "Teaser site landing — Rise of an Empire key art." },
+      { headline: "Video page", caption: "Embedded YouTube trailer with nav and social sharing." },
+      { headline: "Synopsis", caption: "Plot synopsis page with film credits." },
+      { headline: "Themistokles profile", caption: "Character profile with quote, bio, and battle imagery." },
+      { headline: "Artemisia profile", caption: "Character profile carousel — Eva Green as Artemisia." },
+    ],
   },
   {
     slug: "warner-bros-cartoon-universe",
@@ -1035,6 +1111,16 @@ export const projects: Project[] = [
     links: {
       company: "https://trailerparkgroup.com",
     },
+    images: [
+      "/projects/warner-bros-cartoon-universe/1.jpg",
+      "/projects/warner-bros-cartoon-universe/2.jpg",
+      "/projects/warner-bros-cartoon-universe/3.jpg",
+    ],
+    imageCaptions: [
+      { headline: "Game homepage", caption: "Cartoon Universe beta landing — Looney Tunes and Scooby-Doo branding." },
+      { headline: "How to Play", caption: "Instructions page with Unity setup and getting-started content." },
+      { headline: "In-game exit dialog", caption: "Leave-game confirmation overlay inside the Unity client." },
+    ],
   },
   {
     slug: "applied-materials-order-center",
@@ -1090,6 +1176,22 @@ export const projects: Project[] = [
     outcome:
       "Reduced manual workload for the print team and sped up ordering for Applied Materials employees — self-service, approval-gated flow replacing email back-and-forth. Internal corporate scale; don't remember exact order volume.",
     links: {},
+    images: [
+      "/projects/applied-materials-order-center/1.jpg",
+      "/projects/applied-materials-order-center/2.jpg",
+      "/projects/applied-materials-order-center/3.jpg",
+      "/projects/applied-materials-order-center/4.jpg",
+      "/projects/applied-materials-order-center/5.jpg",
+      "/projects/applied-materials-order-center/6.jpg",
+    ],
+    imageCaptions: [
+      { headline: "Administrative details", caption: "Employee ID, cost center, manager approval, and delivery fields." },
+      { headline: "Card details form", caption: "Business card content entry — name, title, phone, and email." },
+      { headline: "PDF proof preview", caption: "Print-ready proof with Applied Materials branding before submit." },
+      { headline: "Order summary", caption: "Review screen — card details, notepad options, and shipping." },
+      { headline: "Order management CMS", caption: "Print-team dashboard — search, status, and approval tracking." },
+      { headline: "Order detail view", caption: "Full order history and card text with edit audit trail." },
+    ],
   },
   {
     slug: "numpy-dojo",
@@ -1154,6 +1256,30 @@ export const projects: Project[] = [
       github: "https://github.com/zeckdude/numpy-dojo",
     },
     featured: true,
+    images: [
+      "/projects/numpy-dojo/1-welcome.png",
+      "/projects/numpy-dojo/2-lessons-scenarios-overview.png",
+      "/projects/numpy-dojo/3-lesson-light.png",
+      "/projects/numpy-dojo/4-lesson-dark.png",
+      "/projects/numpy-dojo/5-scenario-grade-analysis.png",
+      "/projects/numpy-dojo/6-quiz-setup.png",
+      "/projects/numpy-dojo/7-quiz-code-question.png",
+      "/projects/numpy-dojo/8-quiz-feedback-ufuncs.png",
+      "/projects/numpy-dojo/9-quiz-feedback-views.png",
+      "/projects/numpy-dojo/10-quiz-complete.png",
+    ],
+    imageCaptions: [
+      { headline: "Welcome", caption: "Landing page — learn NumPy by doing with lessons, scenarios, and quizzes." },
+      { headline: "Curriculum overview", caption: "22 lesson topics and 12 real-world scenarios at a glance." },
+      { headline: "Lesson — light mode", caption: "Array Properties lesson with live editor and output validation." },
+      { headline: "Lesson — dark mode", caption: "Same lesson layout in dark theme." },
+      { headline: "Scenario", caption: "Student Grade Analysis — apply NumPy to a grade book problem." },
+      { headline: "Quiz setup", caption: "Configurable quiz length before starting." },
+      { headline: "Quiz — code question", caption: "Predict output from a code snippet." },
+      { headline: "Quiz feedback", caption: "Incorrect answer with explanation and review link — universal functions." },
+      { headline: "Quiz feedback", caption: "Views vs copies concept with review link." },
+      { headline: "Quiz complete", caption: "Score summary and per-question review." },
+    ],
   },
   {
     slug: "home-search",
@@ -1198,6 +1324,22 @@ export const projects: Project[] = [
       live: "https://zeckdude.github.io/mls-demo-react/",
       github: "https://github.com/zeckdude/mls-demo-react",
     },
+    images: [
+      "/projects/home-search/1-map-search.png",
+      "/projects/home-search/2-map-polygon-search.png",
+      "/projects/home-search/3-listing-grid.png",
+      "/projects/home-search/4-property-detail-hero.png",
+      "/projects/home-search/5-property-detail-map.png",
+      "/projects/home-search/6-map-property-popup.png",
+    ],
+    imageCaptions: [
+      { headline: "Map search", caption: "Leaflet map with listing pins, filters, and search results." },
+      { headline: "Polygon search", caption: "Draw-to-search area selection on the map." },
+      { headline: "Listing grid", caption: "Filter-driven property cards with price and specs." },
+      { headline: "Property detail", caption: "Listing hero with photo gallery and price." },
+      { headline: "Detail map tab", caption: "Property location map and quick summary sidebar." },
+      { headline: "Map popup", caption: "Listing preview card on map pin hover." },
+    ],
   },
   {
     slug: "exact-recall",
@@ -1265,6 +1407,22 @@ export const projects: Project[] = [
       live: "https://exactrecall.com",
       github: "https://github.com/zeckdude/recall",
     },
+    images: [
+      "/projects/exact-recall/1-homepage.png",
+      "/projects/exact-recall/2-events-search.png",
+      "/projects/exact-recall/3-events-dashboard.png",
+      "/projects/exact-recall/4-log-event.png",
+      "/projects/exact-recall/5-event-detail.png",
+      "/projects/exact-recall/6-settings.png",
+    ],
+    imageCaptions: [
+      { headline: "Homepage", caption: "Landing page — log events, browse your dashboard, or open settings." },
+      { headline: "Events search", caption: "Keyword, semantic, and AI search modes with completeness and date filters." },
+      { headline: "Events dashboard", caption: "Needs-attention strip and recent events list." },
+      { headline: "Log an event", caption: "Conversational interview — one question at a time before save." },
+      { headline: "Event detail", caption: "Structured summary with location, tags, and completeness score." },
+      { headline: "Settings", caption: "Claude model selection, API key, and notification preferences." },
+    ],
   },
   {
     slug: "tag-my-web",
@@ -1310,6 +1468,30 @@ export const projects: Project[] = [
       live: "https://tagmyweb.com",
       github: "https://github.com/zeckdude/youtube-account-tagger",
     },
+    images: [
+      "/projects/tag-my-web/1-landing-hero.png",
+      "/projects/tag-my-web/2-landing-testimonials.png",
+      "/projects/tag-my-web/3-dashboard-grid.png",
+      "/projects/tag-my-web/4-dashboard-list.png",
+      "/projects/tag-my-web/5-manage-tags-drawer.png",
+      "/projects/tag-my-web/6-batch-tag-mode.png",
+      "/projects/tag-my-web/7-advanced-filters.png",
+      "/projects/tag-my-web/8-keyboard-shortcuts.png",
+      "/projects/tag-my-web/9-statistics-dashboard.png",
+      "/projects/tag-my-web/10-tag-usage-over-time.png",
+    ],
+    imageCaptions: [
+      { headline: "Landing page", caption: "Marketing hero — custom tags, smart filtering, and YouTube sync." },
+      { headline: "Testimonials", caption: "Social proof and site footer." },
+      { headline: "Grid view", caption: "Subscription dashboard with tag filters, search, and channel cards." },
+      { headline: "List view", caption: "Compact list layout with inline tagging and favorites." },
+      { headline: "Manage tags", caption: "Tag manager drawer — edit and delete custom tags." },
+      { headline: "Batch tagging", caption: "Multi-select channels for bulk tag add or remove." },
+      { headline: "Advanced filters", caption: "Subscriber count and subscription date range filters." },
+      { headline: "Keyboard shortcuts", caption: "Power-user shortcuts for search, sync, and navigation." },
+      { headline: "Statistics dashboard", caption: "Subscription counts, tag distribution, and top channels." },
+      { headline: "Tag usage over time", caption: "Monthly growth chart per tag." },
+    ],
   },
   {
     slug: "huntcalm",
@@ -1375,6 +1557,13 @@ export const projects: Project[] = [
       "Still in progress. Core sidebar, API, pin/tag/search, and notifications are working; in-context thread tagging and email reminders remain ahead of a public launch. Honest ownership: I found the problem and directed the build — not traditional solo FE implementation.",
     links: { github: "https://github.com/zeckdude/huntcalm" },
     featured: true,
+    images: ["/projects/huntcalm/hero-illustration.png"],
+    imageCaptions: [
+      {
+        headline: "Calm in the job hunt",
+        caption: "Product illustration — organize LinkedIn recruiter threads without the noise.",
+      },
+    ],
   },
   {
     slug: "custom-analytics-platform",
@@ -1489,6 +1678,20 @@ export const projects: Project[] = [
       live: "https://printcustomcalendar.com",
       github: "https://github.com/zeckdude/printable-calendar",
     },
+    images: [
+      "/projects/print-custom-calendar/1-calendar-editor.png",
+      "/projects/print-custom-calendar/2-calendar-simple-theme.png",
+      "/projects/print-custom-calendar/3-theme-picker.png",
+      "/projects/print-custom-calendar/4-print-preview.png",
+      "/projects/print-custom-calendar/5-calendar-with-entries.png",
+    ],
+    imageCaptions: [
+      { headline: "Calendar editor", caption: "August 2026 — editable day cells, instructions, and month navigation." },
+      { headline: "Simple theme", caption: "Clean weekday/weekend styling with inline content fields." },
+      { headline: "Theme picker", caption: "Eight preset themes — Elite selected with live preview." },
+      { headline: "Print preview", caption: "Browser print dialog with print-ready calendar layout." },
+      { headline: "Saved entries", caption: "Custom day content persisted locally — save confirmation toast." },
+    ],
   },
 ];
 
